@@ -229,6 +229,8 @@
         // ============================================
         // 技能等級倍率公式區 (Artale / 舊版楓之谷設定)
         // ============================================
+        
+        // 槍神 - 迅雷
         function getRfPercent(lvl) {
             lvl = Math.max(1, Math.min(30, lvl));
             if (lvl <= 10) return 100 + lvl * 2;       // 1->102, 10->120
@@ -236,22 +238,24 @@
             return 182 + (lvl - 21) * 2;               // 21->182, 30->200
         }
 
+        // 槍神 - 加農砲
         function getCannonPercent(lvl) {
             lvl = Math.max(1, Math.min(30, lvl));
             return Math.min(380, 265 + (lvl - 1) * 5); // 1->265, 30->380
         }
 
+        // 箭神 - 暴風神射
         function getBmRfPercent(lvl) {
             lvl = Math.max(1, Math.min(30, lvl));
-            if (lvl <= 10) return 50 + lvl;            // 1->51, 10->60
-            return 60 + (lvl - 10) * 2;                // 11->62, 30->100
+            return 80 + lvl;                           // 1->81, 30->110
         }
 
+        // 箭神 - 鳳凰
         function getPhoenixPercent(lvl) {
             lvl = Math.max(1, Math.min(30, lvl));
-            if (lvl <= 10) return 300 + lvl * 10;          // 1->310, 10->400
+            if (lvl <= 10) return 300 + lvl * 5;           // 1->305, 10->350
             if (lvl <= 20) return 400 + (lvl - 10) * 5;    // 11->405, 20->450
-            return 450 + (lvl - 20) * 10;                  // 21->460, 30->550
+            return 500 + (lvl - 20) * 5;                   // 21->505, 30->550
         }
 
         const CS_BASE_AVG = 4828.5;
@@ -312,7 +316,7 @@
                 if (mainDpm < 0) mainDpm = 0;
                 
                 const mainPct = getBmRfPercent(mainLvl);
-                const scale = (mainDpm / 7321100) / (mainPct / 100);
+                const scale = (mainDpm / 7321100) / (mainPct / 110);
                 const targetAvg = scale * 5816; 
                 return Math.round(targetAvg * (6407 / 5816));
             } 
@@ -375,9 +379,9 @@
                 const mainPct = getBmRfPercent(mainLvl);
                 const mainBaseDpm = 7321100;
                 
-                // 依據主技能等級倍率折算
-                const mainDpm = Math.floor(mainBaseDpm * scale * (mainPct / 100));
-                const avgHit = Math.floor(14642.2 * scale * (mainPct / 100));
+                // 依據主技能等級倍率折算 (基準Lv30為110%)
+                const mainDpm = Math.floor(mainBaseDpm * scale * (mainPct / 110));
+                const avgHit = Math.floor(14642.2 * scale * (mainPct / 110));
                 const dps = Math.floor(mainDpm / 60);
                 
                 let summonDpm = 0;
