@@ -3,334 +3,521 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artale 表攻與技能差距比對系統</title>
+    <title>Artale DPM 終極實戰比對 (全職業技能等級動態倍率版)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a24;
-            color: #f5f5f6;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background-color: #1a1a24; color: #f5f5f6; margin: 0; padding: 30px 20px;
+            display: flex; flex-direction: column; align-items: center;
         }
-        h2 {
-            color: #4db8ff;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-        }
+        h2 { color: #4db8ff; letter-spacing: 2px; margin-bottom: 30px; text-align: center; }
+        
         .main-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            width: 100%;
-            max-width: 1000px;
-            justify-content: center;
+            display: flex; flex-wrap: wrap; gap: 30px; width: 100%; max-width: 1000px; justify-content: center;
         }
         .panel {
-            background-color: #2b2b36;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-            flex: 1;
-            min-width: 300px;
+            background-color: #2b2b36; padding: 25px; border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4); flex: 1; min-width: 320px;
         }
-        .panel h3 {
-            margin-top: 0;
-            color: #fff;
-            border-bottom: 2px solid #4db8ff;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+        .panel-left { border-top: 5px solid #4db8ff; }
+        .panel-right { border-top: 5px solid #ff4d4d; }
+        .panel h3 { margin-top: 0; color: #fff; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 20px; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #ccc; font-weight: bold; font-size: 0.95em; position: relative; }
+        .edit-link { 
+            color: #ffd700; font-size: 0.85em; text-decoration: none; 
+            background-color: #3b3b4a; padding: 2px 8px; border-radius: 4px;
+            margin-left: 10px; display: none; transition: 0.2s;
         }
-        .right-panel h3 {
-            border-bottom: 2px solid #ff4d4d;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #cccccc;
-            font-size: 0.9em;
-        }
+        .edit-link:hover { background-color: #4a4a5a; }
+
         input[type="number"], select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #444;
-            border-radius: 6px;
-            background-color: #3b3b4a;
-            color: #fff;
-            font-size: 1em;
-            box-sizing: border-box;
+            width: 100%; padding: 12px; border: 1px solid #444; border-radius: 6px;
+            background-color: #3b3b4a; color: #fff; font-size: 1.05em; box-sizing: border-box;
         }
-        input[type="number"]:focus, select:focus {
-            outline: none;
-            border-color: #4db8ff;
-        }
-        .right-panel input:focus, .right-panel select:focus {
-            border-color: #ff4d4d;
-        }
-        .skills-list {
-            background-color: #1e1e24;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            border-left: 4px solid #4db8ff;
-            font-size: 0.9em;
-        }
-        .skills-list ul {
-            margin: 10px 0 0 0;
-            padding-left: 20px;
-            color: #aaa;
-        }
-        .skills-list li {
-            margin-bottom: 5px;
-        }
-        button {
-            width: 100%;
-            max-width: 1000px;
-            padding: 16px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 20px;
-            letter-spacing: 1px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
+        input:focus, select:focus { outline: none; border-color: #4db8ff; }
+        .panel-right input:focus, .panel-right select:focus { border-color: #ff4d4d; }
+
         .result-panel {
-            background-color: #2b2b36;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-            width: 100%;
-            max-width: 1000px;
-            margin-top: 30px;
-            display: none;
-            box-sizing: border-box;
+            background-color: #2b2b36; padding: 30px; border-radius: 12px; width: 100%; max-width: 1000px;
+            margin-top: 30px; box-sizing: border-box; text-align: center;
         }
-        .result-panel.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
+        
+        .diff-text { font-size: 1.5em; margin-bottom: 20px; }
+        .win { color: #4CAF50; font-weight: bold;}
+        .lose { color: #ff4d4d; font-weight: bold;}
+        
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; text-align: left; }
+        .detail-box { background-color: #1e1e24; padding: 20px; border-radius: 8px; border-left: 4px solid #4db8ff; }
+        .detail-box.right { border-left: 4px solid #ff4d4d; }
+        .detail-box h4 { margin: 0 0 10px 0; color: #fff; font-size: 1.2em;}
+        .detail-box p { margin: 8px 0; color: #ccc; }
+        .highlight { color: #ffd700; font-weight: bold; font-size: 1.2em; }
+        .sub-text { color: #888; font-size: 0.85em; }
+        
+        .equiv-box {
+            background-color: #1e1e24; padding: 20px; border-radius: 8px; margin-bottom: 30px;
+            border: 1px dashed #ffd700; text-align: center; display: none;
         }
-        .diff-stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-box {
-            flex: 1;
-            background-color: #1e1e24;
-            padding: 15px;
-            border-radius: 8px;
-            min-width: 250px;
-            text-align: center;
-        }
-        .win { color: #4CAF50; font-weight: bold; }
-        .lose { color: #F44336; font-weight: bold; }
-        .chart-container {
-            position: relative;
-            height: 400px;
-            width: 100%;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .equiv-box p { margin: 8px 0; font-size: 1.1em; color: #ddd; }
+        .equiv-box .eq-val { color: #ffd700; font-weight: bold; font-size: 1.3em; }
+        .gap-val { color: #ff6b6b; font-size: 0.95em; margin-top: 4px !important; }
+
+        .chart-container { position: relative; height: 350px; width: 100%; }
     </style>
 </head>
 <body>
 
-    <h2>Artale 雙職業表攻與技能差距比對圖</h2>
+    <h2>Artale DPM 終極實戰比對</h2>
 
     <div class="main-container">
-        <div class="panel">
-            <h3>我的能力值配置</h3>
+        <div class="panel panel-left">
+            <h3>玩家 A 配置</h3>
             <div class="form-group">
-                <label>我的職業</label>
-                <select id="myClass">
-                    <option value="槍神">槍神 (Corsair)</option>
-                    <option value="箭神">箭神 (Bowmaster)</option>
+                <label>選擇輸出模式 <a href="#" class="edit-link" id="p1Edit" onclick="promptLevel('p1'); return false;">⚙️ 修改精準等級</a></label>
+                <select id="p1Mode" onchange="handleModeChange('p1')">
+                    <optgroup label="槍神 (Corsair)">
+                        <option value="cs_rf">純迅雷</option>
+                        <option value="cs_rf_octo">迅雷 + 4隻章魚</option>
+                        <option value="cs_rf_octo_hm">迅雷 + 4隻章魚 + 精準[數值]</option>
+                        <option value="cs_cannon">純加農砲</option>
+                        <option value="cs_cannon_octo">純加農砲 + 4隻章魚</option>
+                        <option value="cs_cannon_octo_hm">純加農砲 + 4隻章魚 + 精準[數值]</option>
+                    </optgroup>
+                    <optgroup label="箭神 (Bowmaster)">
+                        <option value="bm_rf">純暴風神射</option>
+                        <option value="bm_rf_ph">暴風神射 + 鳳凰</option>
+                    </optgroup>
                 </select>
             </div>
-            <div class="form-group">
-                <label>小表 (最低表攻)</label>
-                <input type="number" id="myMin" placeholder="例: 3429" required>
+            
+            <div class="form-group" id="p1MainLvlGroup">
+                <label>主技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                <input type="number" id="p1MainLvl" value="30" min="1" max="30" oninput="executeCalculation()">
             </div>
-            <div class="form-group">
-                <label>大表 (最高表攻)</label>
-                <input type="number" id="myMax" placeholder="例: 6228" required>
+            
+            <div class="form-group" id="p1SummonLvlGroup" style="display:none;">
+                <label>鳳凰技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                <input type="number" id="p1SummonLvl" value="30" min="1" max="30" oninput="executeCalculation()">
             </div>
 
-            <div class="skills-list">
-                <strong style="color: #4db8ff;">綁定計算的技能組合：</strong>
-                <ul>
-                    <li>火槍</li>
-                    <li>章魚</li>
-                    <li>加農砲模式 (3速13下)</li>
-                    <li>迅雷模式</li>
-                </ul>
+            <div class="form-group">
+                <label>主技能小表 (Min)</label>
+                <input type="number" id="p1Min" value="3429" oninput="executeCalculation()">
+            </div>
+            <div class="form-group">
+                <label>主技能大表 (Max)</label>
+                <input type="number" id="p1Max" value="6228" oninput="executeCalculation()">
             </div>
         </div>
 
-        <div class="panel right-panel">
-            <h3>對手能力值配置</h3>
+        <div class="panel panel-right">
+            <h3>玩家 B 配置</h3>
             <div class="form-group">
-                <label>對象職業</label>
-                <select id="targetClass">
-                    <option value="箭神">箭神 (Bowmaster)</option>
-                    <option value="槍神">槍神 (Corsair)</option>
+                <label>選擇輸出模式 <a href="#" class="edit-link" id="p2Edit" onclick="promptLevel('p2'); return false;">⚙️ 修改精準等級</a></label>
+                <select id="p2Mode" onchange="handleModeChange('p2')">
+                    <optgroup label="箭神 (Bowmaster)">
+                        <option value="bm_rf" selected>純暴風神射</option>
+                        <option value="bm_rf_ph">暴風神射 + 鳳凰</option>
+                    </optgroup>
+                    <optgroup label="槍神 (Corsair)">
+                        <option value="cs_rf">純迅雷</option>
+                        <option value="cs_rf_octo">迅雷 + 4隻章魚</option>
+                        <option value="cs_rf_octo_hm">迅雷 + 4隻章魚 + 精準[數值]</option>
+                        <option value="cs_cannon">純加農砲</option>
+                        <option value="cs_cannon_octo">純加農砲 + 4隻章魚</option>
+                        <option value="cs_cannon_octo_hm">純加農砲 + 4隻章魚 + 精準[數值]</option>
+                    </optgroup>
                 </select>
             </div>
+
+            <div class="form-group" id="p2MainLvlGroup">
+                <label>主技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                <input type="number" id="p2MainLvl" value="30" min="1" max="30" oninput="executeCalculation()">
+            </div>
+            
+            <div class="form-group" id="p2SummonLvlGroup" style="display:none;">
+                <label>鳳凰技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                <input type="number" id="p2SummonLvl" value="30" min="1" max="30" oninput="executeCalculation()">
+            </div>
+
             <div class="form-group">
-                <label>對手小表 (最低表攻)</label>
-                <input type="number" id="targetMin" placeholder="請輸入對手小表" required>
+                <label>主技能小表 (Min)</label>
+                <input type="number" id="p2Min" value="5225" oninput="executeCalculation()">
             </div>
             <div class="form-group">
-                <label>對手大表 (最高表攻)</label>
-                <input type="number" id="targetMax" placeholder="請輸入對手大表" required>
+                <label>主技能大表 (Max)</label>
+                <input type="number" id="p2Max" value="6407" oninput="executeCalculation()">
             </div>
         </div>
     </div>
 
-    <button onclick="generateComparison()">產生比對圖與數據</button>
-
     <div class="result-panel" id="resultPanel">
-        <div class="diff-stats" id="diffStatsContent">
-            </div>
+        <div class="diff-text" id="diffText"></div>
+        
+        <div class="details-grid">
+            <div class="detail-box" id="p1Detail"></div>
+            <div class="detail-box right" id="p2Detail"></div>
+        </div>
+
+        <div class="equiv-box" id="equivBox"></div>
+
         <div class="chart-container">
-            <canvas id="comparisonChart"></canvas>
+            <canvas id="dpmChart"></canvas>
         </div>
     </div>
 
     <script>
-        let chartInstance = null;
+        let p1HmLevel = 20;
+        let p2HmLevel = 20;
 
-        function generateComparison() {
-            // 獲取輸入值
-            const myMin = parseFloat(document.getElementById('myMin').value);
-            const myMax = parseFloat(document.getElementById('myMax').value);
-            const targetMin = parseFloat(document.getElementById('targetMin').value);
-            const targetMax = parseFloat(document.getElementById('targetMax').value);
-            const myClass = document.getElementById('myClass').value;
-            const targetClass = document.getElementById('targetClass').value;
+        function updateVisibility(player) {
+            const mode = document.getElementById(player + 'Mode').value;
+            const editBtn = document.getElementById(player + 'Edit');
+            const summonLvlGroup = document.getElementById(player + 'SummonLvlGroup');
 
-            if (isNaN(myMin) || isNaN(myMax) || isNaN(targetMin) || isNaN(targetMax)) {
-                alert("請確保所有大表與小表的欄位都已填入數字！");
-                return;
-            }
+            // 精準修改按鈕顯示邏輯
+            editBtn.style.display = mode.endsWith('_hm') ? 'inline-block' : 'none';
 
-            // 計算差距 (對手 - 自己)
-            const minDiff = targetMin - myMin;
-            const maxDiff = targetMax - myMax;
+            // 只有選取「暴風神射+鳳凰」才顯示鳳凰等級輸入框
+            summonLvlGroup.style.display = (mode === 'bm_rf_ph') ? 'block' : 'none';
+        }
+
+        function handleModeChange(player) {
+            const selectEl = document.getElementById(player + 'Mode');
+            const mode = selectEl.value;
             
-            // 計算百分比 (以自己的能力值為基準分母)
-            const minPct = myMin > 0 ? ((minDiff / myMin) * 100).toFixed(2) : 0;
-            const maxPct = myMax > 0 ? ((maxDiff / myMax) * 100).toFixed(2) : 0;
+            updateVisibility(player);
 
-            // 格式化輸出文字
-            function formatResult(diff, pct) {
-                if (diff > 0) {
-                    return `對手勝出 <span class="lose">${diff.toLocaleString()}</span> (贏 <span class="lose">+${pct}%</span>)`;
-                } else if (diff < 0) {
-                    return `你勝出 <span class="win">${Math.abs(diff).toLocaleString()}</span> (贏 <span class="win">${Math.abs(pct)}%</span>)`;
-                } else {
-                    return `完全平手 (0%)`;
+            Array.from(selectEl.options).forEach(opt => {
+                if (opt.value.endsWith('_hm')) {
+                    opt.text = opt.text.replace(/精準\[\d+\]/, '精準[數值]');
+                }
+            });
+
+            if (mode.endsWith('_hm')) {
+                promptLevel(player); 
+            } else {
+                executeCalculation(); 
+            }
+        }
+
+        function promptLevel(player) {
+            const selectEl = document.getElementById(player + 'Mode');
+            let currentLvl = player === 'p1' ? p1HmLevel : p2HmLevel;
+            let val = prompt("請輸入精準目標等級 (1~20):", currentLvl);
+            
+            if (val !== null && val.trim() !== "") {
+                let lvl = parseInt(val, 10);
+                if (!isNaN(lvl)) {
+                    if (lvl < 1) lvl = 1;
+                    if (lvl > 20) lvl = 20;
+                    if (player === 'p1') p1HmLevel = lvl;
+                    else p2HmLevel = lvl;
                 }
             }
-
-            const statsHtml = `
-                <div class="stat-box">
-                    <h4 style="margin-top:0; color:#ccc;">【小表差距】</h4>
-                    <div>我的: <strong>${myMin.toLocaleString()}</strong> vs 對手: <strong>${targetMin.toLocaleString()}</strong></div>
-                    <div style="margin-top:10px; font-size:1.1em;">${formatResult(minDiff, minPct)}</div>
-                </div>
-                <div class="stat-box">
-                    <h4 style="margin-top:0; color:#ccc;">【大表差距】</h4>
-                    <div>我的: <strong>${myMax.toLocaleString()}</strong> vs 對手: <strong>${targetMax.toLocaleString()}</strong></div>
-                    <div style="margin-top:10px; font-size:1.1em;">${formatResult(maxDiff, maxPct)}</div>
-                </div>
-            `;
             
-            document.getElementById('diffStatsContent').innerHTML = statsHtml;
-            document.getElementById('resultPanel').classList.add('active');
-
-            // 繪製 Chart.js 圖表
-            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            currentLvl = player === 'p1' ? p1HmLevel : p2HmLevel;
+            const optionEl = selectEl.options[selectEl.selectedIndex];
+            optionEl.text = optionEl.text.replace(/精準\[\d+\]|精準\[數值\]/, `精準[${currentLvl}]`);
             
-            // 如果已有圖表，先銷毀才能重繪
-            if (chartInstance) {
-                chartInstance.destroy();
+            executeCalculation(); 
+        }
+
+        // ============================================
+        // 技能等級倍率公式區 (Artale / 舊版楓之谷設定)
+        // ============================================
+        function getRfPercent(lvl) {
+            lvl = Math.max(1, Math.min(30, lvl));
+            if (lvl <= 10) return 100 + lvl * 2;       // 1->102, 10->120
+            if (lvl <= 20) return 142 + (lvl - 11) * 2; // 11->142, 20->160
+            return 182 + (lvl - 21) * 2;               // 21->182, 30->200
+        }
+
+        function getCannonPercent(lvl) {
+            lvl = Math.max(1, Math.min(30, lvl));
+            return Math.min(380, 265 + (lvl - 1) * 5); // 1->265, 30->380
+        }
+
+        function getBmRfPercent(lvl) {
+            lvl = Math.max(1, Math.min(30, lvl));
+            if (lvl <= 10) return 50 + lvl;            // 1->51, 10->60
+            return 60 + (lvl - 10) * 2;                // 11->62, 30->100
+        }
+
+        function getPhoenixPercent(lvl) {
+            lvl = Math.max(1, Math.min(30, lvl));
+            if (lvl <= 10) return 300 + lvl * 10;          // 1->310, 10->400
+            if (lvl <= 20) return 400 + (lvl - 10) * 5;    // 11->405, 20->450
+            return 450 + (lvl - 20) * 10;                  // 21->460, 30->550
+        }
+
+        const CS_BASE_AVG = 4828.5;
+
+        const BM_MODES = {
+            'bm_rf': { name: "純暴風神射", hasPhoenix: false },
+            'bm_rf_ph': { name: "暴風神射 + 鳳凰", hasPhoenix: true }
+        };
+
+        const CS_NAMES = {
+            'cs_rf': "純迅雷",
+            'cs_rf_octo': "迅雷 + 4隻章魚",
+            'cs_rf_octo_hm': "迅雷 + 4隻章魚 + 精準目標",
+            'cs_cannon': "純加農砲",
+            'cs_cannon_octo': "純加農砲 + 4隻章魚",
+            'cs_cannon_octo_hm': "純加農砲 + 4隻章魚 + 精準目標"
+        };
+
+        // 統整槍神基礎計算
+        function getCorsairBaseDpm(modeKey, skillLvl, hmLevel) {
+            let mainBase = 0;
+            let mainHm20 = 0;
+            let summonBase = 0;
+            let skillPct = 0;
+
+            if (modeKey.includes('rf')) {
+                skillPct = getRfPercent(skillLvl);
+                mainBase = 4195980 * (skillPct / 200);   
+                mainHm20 = 5004963 * (skillPct / 200); 
+            } else if (modeKey.includes('cannon')) {
+                skillPct = getCannonPercent(skillLvl);
+                mainBase = 6074286 * (skillPct / 380);   
+                mainHm20 = 6453882 * (skillPct / 380);
             }
 
+            if (modeKey.includes('octo')) {
+                summonBase = 3756450;
+            }
+
+            let currentMainBase = mainBase;
+            if (modeKey.includes('hm')) {
+                hmLevel = Math.max(1, Math.min(20, hmLevel || 20));
+                currentMainBase = mainBase + ((mainHm20 - mainBase) * (hmLevel / 20));
+            }
+
+            return { currentMainBase, summonBase, skillPct, mainBase };
+        }
+
+        function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl) {
+            if (modeKey.startsWith('bm_')) {
+                const cfg = BM_MODES[modeKey];
+                let mainDpm = targetDpm;
+                
+                if (cfg.hasPhoenix) {
+                    const summonPct = getPhoenixPercent(summonLvl);
+                    mainDpm -= Math.floor(221528 * (summonPct / 550));
+                }
+                if (mainDpm < 0) mainDpm = 0;
+                
+                const mainPct = getBmRfPercent(mainLvl);
+                const scale = (mainDpm / 7321100) / (mainPct / 100);
+                const targetAvg = scale * 5816; 
+                return Math.round(targetAvg * (6407 / 5816));
+            } 
+            else if (modeKey.startsWith('cs_')) {
+                const { currentMainBase, summonBase } = getCorsairBaseDpm(modeKey, mainLvl, hmLevel);
+                const baseTotal = currentMainBase + summonBase;
+                if (baseTotal === 0) return 0;
+
+                const scale = targetDpm / baseTotal;
+                const targetAvg = scale * CS_BASE_AVG;
+                return Math.round(targetAvg * (6228 / 4828.5));
+            }
+            return 0;
+        }
+
+        function calculateDPM(modeKey, min, max, hmLevel, mainLvl, summonLvl) {
+            if (modeKey.startsWith('cs_')) {
+                const inputAvg = (min + max) / 2;
+                const scale = inputAvg / CS_BASE_AVG; 
+                
+                const { currentMainBase, summonBase, skillPct, mainBase } = getCorsairBaseDpm(modeKey, mainLvl, hmLevel);
+                const isHm = modeKey.includes('hm');
+                let detailName = CS_NAMES[modeKey];
+                
+                if (isHm) {
+                    hmLevel = Math.max(1, Math.min(20, hmLevel || 20));
+                    detailName = detailName.replace('精準目標', `精準(${hmLevel}等)`);
+                }
+
+                const mainDpm = Math.floor(currentMainBase * scale);
+                const summonDpm = Math.floor(summonBase * scale);
+                const totalDpm = mainDpm + summonDpm;
+                const mainDps = Math.floor(mainDpm / 60);
+
+                let detailHtml = `<p>主技能 DPS (秒輸出)：${mainDps.toLocaleString()}</p>`;
+                
+                if (isHm) {
+                    const scaledMainBase = Math.floor(mainBase * scale);
+                    const scaledBonus = mainDpm - scaledMainBase;
+                    detailHtml += `<p>主技能 DPM：${mainDpm.toLocaleString()} <span style="font-size:0.9em; color:#aaa;">(${scaledMainBase.toLocaleString()}+精準等級[${scaledBonus.toLocaleString()}])</span> <br><span class="sub-text" style="color:#ffcc00; display:inline-block; margin-top:4px;">[Lv.${mainLvl} 技能倍率: ${skillPct}%]</span></p>`;
+                } else {
+                    detailHtml += `<p>主技能 DPM：${mainDpm.toLocaleString()} <span class="sub-text" style="color:#ffcc00; margin-left:5px;">[Lv.${mainLvl} 技能倍率: ${skillPct}%]</span></p>`;
+                }
+
+                if (summonDpm > 0) {
+                    detailHtml += `<p>章魚群 DPM：${summonDpm.toLocaleString()}</p>`;
+                }
+
+                return {
+                    name: detailName,
+                    totalDpm: totalDpm,
+                    html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
+                };
+            } 
+            else if (modeKey.startsWith('bm_')) {
+                const cfg = BM_MODES[modeKey];
+                const inputAvg = (min + max) / 2;
+                const scale = inputAvg / 5816; 
+
+                const mainPct = getBmRfPercent(mainLvl);
+                const mainBaseDpm = 7321100;
+                
+                // 依據主技能等級倍率折算
+                const mainDpm = Math.floor(mainBaseDpm * scale * (mainPct / 100));
+                const avgHit = Math.floor(14642.2 * scale * (mainPct / 100));
+                const dps = Math.floor(mainDpm / 60);
+                
+                let summonDpm = 0;
+                let summonPct = 0;
+                if (cfg.hasPhoenix) {
+                    summonPct = getPhoenixPercent(summonLvl);
+                    // 滿等鳳凰期望值為 221528 (550%)，依據等級倍率折算
+                    summonDpm = Math.floor(221528 * (summonPct / 550));
+                }
+                const totalDpm = mainDpm + summonDpm;
+
+                let detailHtml = `
+                    <p>單段平均傷害：${avgHit.toLocaleString()}</p>
+                    <p>主技能 DPS (秒輸出)：${dps.toLocaleString()}</p>
+                    <p>主技能 DPM：${mainDpm.toLocaleString()} <span class="sub-text" style="color:#ffcc00; margin-left:5px;">[Lv.${mainLvl} 倍率: ${mainPct}%]</span></p>
+                `;
+                if (cfg.hasPhoenix) {
+                    detailHtml += `<p>鳳凰 DPM：${summonDpm.toLocaleString()} <span class="sub-text" style="color:#ffcc00; margin-left:5px;">[Lv.${summonLvl} 倍率: ${summonPct}%]</span></p>`;
+                }
+
+                return {
+                    name: cfg.name,
+                    totalDpm: totalDpm,
+                    html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
+                };
+            }
+        }
+
+        let chartInstance = null;
+
+        function executeCalculation() {
+            const p1Mode = document.getElementById('p1Mode').value;
+            const p1Min = Number(document.getElementById('p1Min').value);
+            const p1Max = Number(document.getElementById('p1Max').value);
+            const p1MainLvl = Number(document.getElementById('p1MainLvl').value) || 30;
+            const p1SummonLvl = Number(document.getElementById('p1SummonLvl').value) || 30;
+            const p1Result = calculateDPM(p1Mode, p1Min, p1Max, p1HmLevel, p1MainLvl, p1SummonLvl);
+
+            const p2Mode = document.getElementById('p2Mode').value;
+            const p2Min = Number(document.getElementById('p2Min').value);
+            const p2Max = Number(document.getElementById('p2Max').value);
+            const p2MainLvl = Number(document.getElementById('p2MainLvl').value) || 30;
+            const p2SummonLvl = Number(document.getElementById('p2SummonLvl').value) || 30;
+            const p2Result = calculateDPM(p2Mode, p2Min, p2Max, p2HmLevel, p2MainLvl, p2SummonLvl);
+
+            document.getElementById('p1Detail').innerHTML = `
+                <h4>[玩家 A] ${p1Result.name}</h4>
+                ${p1Result.html}
+                <hr style="border-color:#444; margin:10px 0;">
+                <p>總合 DPM：<span class="highlight">${p1Result.totalDpm.toLocaleString()}</span></p>
+            `;
+
+            document.getElementById('p2Detail').innerHTML = `
+                <h4>[玩家 B] ${p2Result.name}</h4>
+                ${p2Result.html}
+                <hr style="border-color:#444; margin:10px 0;">
+                <p>總合 DPM：<span class="highlight">${p2Result.totalDpm.toLocaleString()}</span></p>
+            `;
+
+            const diff = p2Result.totalDpm - p1Result.totalDpm;
+            const pct = (Math.abs(diff) / p1Result.totalDpm * 100).toFixed(2);
+            let diffHtml = "";
+
+            if (diff > 0) {
+                diffHtml = `玩家 B 高出 <span class="lose">${diff.toLocaleString()}</span> (贏 ${pct}%)`;
+            } else if (diff < 0) {
+                diffHtml = `玩家 A 高出 <span class="win">${Math.abs(diff).toLocaleString()}</span> (贏 ${pct}%)`;
+            } else {
+                diffHtml = "雙方輸出完全一致！";
+            }
+            
+            document.getElementById('diffText').innerHTML = `<strong>【輸出差距比對】</strong><br>${diffHtml}`;
+            
+            // ---------------------------------------------------------
+            // 追趕大表差距計算
+            // ---------------------------------------------------------
+            const classNameA = p1Mode.startsWith('cs_') ? '槍神' : '箭神';
+            const classNameB = p2Mode.startsWith('cs_') ? '槍神' : '箭神';
+            
+            let eqHtml = `<h4 style="margin:0 0 10px 0; color:#fff;">🎯 等效大表追趕需求</h4>`;
+            let showEqBox = false;
+
+            if (diff > 0) {
+                // B比較高，A需要追趕
+                const eqA = getEquivalentRange(p2Result.totalDpm, p1Mode, p1HmLevel, p1MainLvl, p1SummonLvl);
+                const gap = eqA - p1Max;
+                eqHtml += `<p>要達到 玩家 B (${classNameB}) 的總輸出，玩家 A (${classNameA}) 大表約需撐到：<span class="eq-val">${eqA.toLocaleString()}</span></p>`;
+                if (gap > 0) {
+                    eqHtml += `<p class="gap-val">(距離當前大表還差：<strong>${gap.toLocaleString()}</strong>)</p>`;
+                }
+                showEqBox = true;
+            } else if (diff < 0) {
+                // A比較高，B需要追趕
+                const eqB = getEquivalentRange(p1Result.totalDpm, p2Mode, p2HmLevel, p2MainLvl, p2SummonLvl);
+                const gap = eqB - p2Max;
+                eqHtml += `<p>要達到 玩家 A (${classNameA}) 的總輸出，玩家 B (${classNameB}) 大表約需撐到：<span class="eq-val">${eqB.toLocaleString()}</span></p>`;
+                if (gap > 0) {
+                    eqHtml += `<p class="gap-val">(距離當前大表還差：<strong>${gap.toLocaleString()}</strong>)</p>`;
+                }
+                showEqBox = true;
+            }
+
+            const equivBoxEl = document.getElementById('equivBox');
+            if (showEqBox) {
+                equivBoxEl.innerHTML = eqHtml;
+                equivBoxEl.style.display = 'block';
+            } else {
+                equivBoxEl.style.display = 'none'; 
+            }
+
+            const ctx = document.getElementById('dpmChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['小表 (最低表攻)', '大表 (最高表攻)'],
+                    labels: ['總合實戰 DPM'],
                     datasets: [
-                        {
-                            label: `我的數值 (${myClass})`,
-                            data: [myMin, myMax],
-                            backgroundColor: 'rgba(77, 184, 255, 0.8)',
-                            borderColor: 'rgba(77, 184, 255, 1)',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        },
-                        {
-                            label: `對手數值 (${targetClass})`,
-                            data: [targetMin, targetMax],
-                            backgroundColor: 'rgba(255, 77, 77, 0.8)',
-                            borderColor: 'rgba(255, 77, 77, 1)',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }
+                        { label: `玩家 A (${p1Result.name})`, data: [p1Result.totalDpm], backgroundColor: 'rgba(77, 184, 255, 0.8)', borderColor: 'rgba(77, 184, 255, 1)', borderWidth: 1 },
+                        { label: `玩家 B (${p2Result.name})`, data: [p2Result.totalDpm], backgroundColor: 'rgba(255, 77, 77, 0.8)', borderColor: 'rgba(255, 77, 77, 1)', borderWidth: 1 }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: '#f5f5f6', font: { size: 14 } }
-                        },
-                        title: {
-                            display: true,
-                            text: '雙方雪表數值直觀比對',
-                            color: '#fff',
-                            font: { size: 18 }
-                        }
-                    },
+                    responsive: true, maintainAspectRatio: false,
+                    animation: { duration: 400 }, 
+                    plugins: { legend: { labels: { color: '#fff', font: { size: 14 } } } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: '#ccc' },
-                            grid: { color: '#444' }
-                        },
-                        x: {
-                            ticks: { color: '#ccc', font: { size: 14 } },
-                            grid: { display: false }
-                        }
+                        y: { ticks: { color: '#ccc' }, grid: { color: '#444' }, beginAtZero: true },
+                        x: { ticks: { color: '#ccc', font: { size: 14 } }, grid: { display: false } }
                     }
                 }
             });
             
-            // 自動往下滾動到結果區塊
-            setTimeout(() => {
-                document.getElementById('resultPanel').scrollIntoView({ behavior: 'smooth' });
-            }, 100);
+            document.getElementById('resultPanel').classList.add('active');
         }
-    </script>
 
+        window.onload = function() {
+            updateVisibility('p1');
+            updateVisibility('p2');
+            executeCalculation();
+        };
+    </script>
 </body>
 </html>
