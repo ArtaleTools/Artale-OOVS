@@ -101,7 +101,7 @@
     <h2>Artale OOVS [海怒斯單體] <span class="author-tag">(資料來源及作者: Philip)</span></h2>
     
     <div class="header-section">
-        <p class="update-time">最後更新時間：2026-04-06 14:15</p>
+        <p class="update-time">最後更新時間：2026-04-06 15:00</p>
         <button class="btn-reset" onclick="resetData()">🔄 還原初始化設定</button>
     </div>
 
@@ -117,6 +117,9 @@
                     </optgroup>
                     <optgroup label="英雄 (Hero)">
                         <option value="hero_brandish">無雙劍舞30 260% + 進階鬥氣滿215%</option>
+                    </optgroup>
+                    <optgroup label="聖騎士 (Paladin)">
+                        <option value="paladin_blast">騎士衝擊波30 降魔 聖劍30[140%]</option>
                     </optgroup>
                     <optgroup label="槍神 (Corsair)">
                         <option value="cs_rf">純迅雷</option>
@@ -197,6 +200,9 @@
                     <optgroup label="英雄 (Hero)">
                         <option value="hero_brandish">無雙劍舞30 260% + 進階鬥氣滿215%</option>
                     </optgroup>
+                    <optgroup label="聖騎士 (Paladin)">
+                        <option value="paladin_blast">騎士衝擊波30 降魔 聖劍30[140%]</option>
+                    </optgroup>
                 </select>
             </div>
 
@@ -263,7 +269,6 @@
         let p2HmLevel = 20;
         let currentClass = { p1: 'nl', p2: 'bm' };
 
-        // 讀取本地儲存的設定
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
@@ -298,7 +303,6 @@
             }
         }
 
-        // 儲存設定至本地端
         function saveData() {
             const state = {
                 p1HmLevel: p1HmLevel,
@@ -326,7 +330,6 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         }
 
-        // 還原預設值
         function resetData() {
             if (confirm("確定要清除所有設定並還原至初始化狀態嗎？")) {
                 localStorage.removeItem(STORAGE_KEY);
@@ -344,7 +347,7 @@
             editBtn.style.display = mode.endsWith('_hm') ? 'inline-block' : 'none';
             summonLvlGroup.style.display = (mode === 'bm_rf_ph') ? 'block' : 'none';
 
-            if (mode.startsWith('hero_') || mode.startsWith('nl_')) {
+            if (mode.startsWith('hero_') || mode.startsWith('nl_') || mode.startsWith('paladin_')) {
                 mainLvlGroup.style.display = 'none';
             } else {
                 mainLvlGroup.style.display = 'block';
@@ -378,6 +381,8 @@
                     minEl.value = 5035; maxEl.value = 9202; weaponAttEl.value = 156;
                 } else if (newClassPrefix === 'nl') {
                     minEl.value = 3000; maxEl.value = 5343; weaponAttEl.value = 122;
+                } else if (newClassPrefix === 'paladin') {
+                    minEl.value = 4808; maxEl.value = 8789; weaponAttEl.value = 149;
                 }
                 currentClass[player] = newClassPrefix;
             }
@@ -499,7 +504,7 @@
 
             let classMultiplier = 3.6; 
             if (mode.startsWith('bm_')) classMultiplier = 3.4;
-            if (mode.startsWith('hero_')) classMultiplier = 4.0;
+            if (mode.startsWith('hero_') || mode.startsWith('paladin_')) classMultiplier = 4.0;
 
             const statDiff = levelDiff * 5 * 1.09; 
             const rangeDiff = statDiff * classMultiplier * (weaponAtt / 100);
@@ -511,6 +516,9 @@
             return { adjMin: Math.round(adjMin), adjMax: Math.round(adjMax), rangeDiff: Math.round(rangeDiff) };
         }
 
+        // ============================================
+        // 等效大表逆推公式
+        // ============================================
         function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
             if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
@@ -548,10 +556,24 @@
                 let mainDpm = targetDpm;
                 
                 mainDpm /= seMult; 
-                if (hasSI) mainDpm /= 1.1905; 
+                const siMult = hasSI ? (750 / 630) : 1;
+                mainDpm /= siMult; 
                 if (mainDpm < 0) mainDpm = 0;
                 
                 const scale = mainDpm / 5830720;
+                const targetAvg = scale * HERO_BASE_AVG; 
+                return Math.round(targetAvg * (8789 / HERO_BASE_AVG));
+            }
+            else if (modeKey.startsWith('paladin_')) {
+                let mainDpm = targetDpm;
+                const siMult = hasSI ? (750 / 630) : 1; 
+                mainDpm /= siMult;
+                
+                const expectedSkillMult = 7.5 + (hasSE ? 0.21 : 0);
+                const avgHitBase = mainDpm / 80 / (expectedSkillMult * 1.4 * 1.1);
+                const avgHitBeforeDef = avgHitBase + 0.55 * 920; 
+                
+                const scale = avgHitBeforeDef / HERO_BASE_AVG;
                 const targetAvg = scale * HERO_BASE_AVG; 
                 return Math.round(targetAvg * (8789 / HERO_BASE_AVG));
             }
@@ -677,15 +699,17 @@
                 const sePctDisplay = hasSE ? ((seMult - 1) * 100).toFixed(1) : 0;
                 const seTag = hasSE ? `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[會心加成 +${sePctDisplay}%]</span>` : '';
                 
-                const siMult = hasSI ? 1.1905 : 1;
-                const siTag = hasSI ? `<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +19.1%]</span>` : '';
+                const siMult = hasSI ? (750 / 630) : 1;
+                const siPctDisplay = hasSI ? (((750/630) - 1) * 100).toFixed(2) : 0;
+                const siTag = hasSI ? `<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +${siPctDisplay}% (750ms→630ms)]</span>` : '';
 
                 const mainBaseDpm = 5830720;
                 const mainDpm = Math.floor(mainBaseDpm * scale * seMult * siMult);
                 
                 const baseAvgHit = 36442;
                 const avgHit = Math.floor(baseAvgHit * scale * seMult); 
-                const dps = Math.round(mainDpm / 60);
+                const attacksPerMin = hasSI ? (60000 / 630) : 80; // 95.238 vs 80
+                const dps = Math.round(avgHit * attacksPerMin / 60);
                 
                 const totalDpm = mainDpm;
 
@@ -700,6 +724,40 @@
                     totalDpm: totalDpm,
                     adjMax: max,
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
+                };
+            }
+            else if (modeKey.startsWith('paladin_')) {
+                const inputAvg = (min + max) / 2;
+                
+                const defReduction = 0.55 * 920; 
+                const avgHitBase = Math.max(0, inputAvg - defReduction);
+                
+                const expectedSkillMult = 7.5 + (hasSE ? 0.21 : 0);
+                const holyMult = 1.4 * 1.1; 
+                
+                const avgHit = Math.floor(avgHitBase * expectedSkillMult * holyMult);
+                const attacksPerMin = hasSI ? (60000 / 630) : 80; // 750ms -> 630ms
+                
+                const mainDpm = Math.floor(avgHit * attacksPerMin);
+                const dps = Math.floor(mainDpm / 60);
+                const totalDpm = mainDpm;
+                
+                const sePctDisplay = hasSE ? (((7.5 + 0.21) / 7.5 - 1) * 100).toFixed(1) : 0;
+                const seTag = hasSE ? `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[會心加成 +${sePctDisplay}%]</span>` : '';
+                const siPctDisplay = hasSI ? (((750/630) - 1) * 100).toFixed(2) : 0;
+                const siTag = hasSI ? `<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +${siPctDisplay}% (750ms→630ms)]</span>` : '';
+
+                let detailHtml = levelAdjNote + `
+                    <p>單段平均傷害：${avgHit.toLocaleString()} <span class="sub-text" style="color:#aaa;">(已扣防 920，含聖劍140%×魔防消除1.1)</span></p>
+                    <p>主技能 DPS (秒輸出)：${dps.toLocaleString()}</p>
+                    <p>主技能 DPM：${mainDpm.toLocaleString()} <br><span style="display:inline-block; margin-top:4px;">${hasSE ? seTag : ''}${hasSI ? siTag : ''}</span></p>
+                `;
+
+                return {
+                    name: "騎士衝擊波30 降魔 聖劍30[140%]",
+                    totalDpm: totalDpm,
+                    adjMax: max,
+                    html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用實測底層公式，已自動扣除 920 魚王防禦)</p>`
                 };
             }
             else if (modeKey.startsWith('nl_')) {
@@ -795,6 +853,7 @@
                 if (mode.startsWith('cs_')) return '槍神';
                 if (mode.startsWith('bm_')) return '箭神';
                 if (mode.startsWith('hero_')) return '英雄';
+                if (mode.startsWith('paladin_')) return '聖騎士';
                 if (mode.startsWith('nl_')) return '夜使者';
                 return '未知';
             };
