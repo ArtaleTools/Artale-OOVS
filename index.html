@@ -26,8 +26,42 @@
         }
         .btn-reset:hover { background-color: #ff3333; transform: scale(1.05); }
 
+        /* 全新外層排版：左右分欄 */
+        .page-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 1350px;
+            gap: 30px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        /* 說明書面板 */
+        .manual-panel {
+            background-color: #2b2b36; padding: 25px; border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            flex: 0 0 300px; /* 固定寬度 */
+            border-top: 5px solid #28a745; /* 綠色飾條 */
+            box-sizing: border-box;
+        }
+        .manual-panel h3 { margin-top: 0; color: #fff; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 20px; text-align: center;}
+        .manual-step { margin-bottom: 25px; }
+        .manual-step h4 { color: #4db8ff; margin: 0 0 10px 0; font-size: 1.05em; }
+        .manual-step p { color: #ccc; font-size: 0.95em; line-height: 1.6; margin: 0; }
+        .manual-step .highlight-text { color: #ffcc00; font-weight: bold; }
+        .manual-step .sub-text { color: #888; font-size: 0.85em; display: block; margin-top: 8px; line-height: 1.4; background: #1e1e24; padding: 10px; border-radius: 6px; border-left: 3px solid #ffd700;}
+
+        /* 右側主要計算區塊 */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+        }
+
         .main-container {
-            display: flex; flex-wrap: wrap; gap: 30px; width: 100%; max-width: 1000px; justify-content: center;
+            display: flex; flex-wrap: wrap; gap: 30px; width: 100%; justify-content: center;
         }
         .panel {
             background-color: #2b2b36; padding: 25px; border-radius: 12px;
@@ -69,7 +103,7 @@
         }
 
         .result-panel {
-            background-color: #2b2b36; padding: 30px; border-radius: 12px; width: 100%; max-width: 1000px;
+            background-color: #2b2b36; padding: 30px; border-radius: 12px; width: 100%;
             margin-top: 30px; box-sizing: border-box; text-align: center;
         }
         
@@ -94,6 +128,12 @@
         .gap-val { color: #ff6b6b; font-size: 0.95em; margin-top: 4px !important; }
 
         .chart-container { position: relative; height: 350px; width: 100%; }
+
+        /* 響應式排版：螢幕縮小會自動變成上下排列 */
+        @media (max-width: 1100px) {
+            .page-wrapper { flex-direction: column; align-items: center; }
+            .manual-panel { flex: none; width: 100%; max-width: 1000px; }
+        }
     </style>
 </head>
 <body>
@@ -105,180 +145,201 @@
         <button class="btn-reset" onclick="resetData()">🔄 還原初始化設定</button>
     </div>
 
-    <div class="main-container">
-        <div class="panel panel-left">
-            <h3>玩家 A 配置</h3>
-            <div class="form-group">
-                <label>選擇輸出模式 <a href="#" class="edit-link" id="p1Edit" onclick="promptLevel('p1'); return false;">⚙️ 修改精準等級</a></label>
-                <select id="p1Mode" onchange="handleModeChange('p1')">
-                    <optgroup label="夜使者 (Night Lord)">
-                        <option value="nl_tt30">三飛閃30 + 影分身 + 無形鏢</option>
-                        <option value="nl_tt20">三飛閃20 + 影分身 + 無形鏢</option>
-                    </optgroup>
-                    <optgroup label="英雄 (Hero)">
-                        <option value="hero_brandish">無雙劍舞30 260% + 進階鬥氣滿215%</option>
-                    </optgroup>
-                    <optgroup label="聖騎士 (Paladin)">
-                        <option value="paladin_blast">騎士衝擊波30 降魔 聖劍30[140%]</option>
-                        <option value="paladin_blast_fire">騎士衝擊波30 降魔 火劍30[120%]</option>
-                    </optgroup>
-                    <optgroup label="槍神 (Corsair)">
-                        <option value="cs_rf">純迅雷</option>
-                        <option value="cs_rf_octo">迅雷 + 4隻章魚</option>
-                        <option value="cs_rf_octo_hm">迅雷 + 4隻章魚 + 精準[數值]</option>
-                        <option value="cs_cannon">純加農砲</option>
-                        <option value="cs_cannon_octo">純加農砲 + 4隻章魚</option>
-                        <option value="cs_cannon_octo_hm">純加農砲 + 4隻章魚 + 精準[數值]</option>
-                    </optgroup>
-                    <optgroup label="箭神 (Bowmaster)">
-                        <option value="bm_rf">純暴風神射</option>
-                        <option value="bm_rf_ph">暴風神射 + 鳳凰</option>
-                    </optgroup>
-                </select>
-            </div>
-            
-            <div class="form-group" id="p1MainLvlGroup" style="display:none;">
-                <label>主技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
-                <input type="number" id="p1MainLvl" value="30" min="1" max="30" oninput="executeCalculation()">
-            </div>
-            
-            <div class="form-group" id="p1SummonLvlGroup" style="display:none;">
-                <label>鳳凰技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
-                <input type="number" id="p1SummonLvl" value="30" min="1" max="30" oninput="executeCalculation()">
-            </div>
-
-            <div class="flex-row">
-                <div class="form-group">
-                    <label>目標等級 (基準: 200)</label>
-                    <input type="number" id="p1TargetLvl" value="200" oninput="executeCalculation()">
-                </div>
-                <div class="form-group">
-                    <label>總武器攻擊力</label>
-                    <input type="number" id="p1WeaponAtt" value="122" oninput="executeCalculation()">
-                </div>
-            </div>
-
-            <div class="flex-row" id="p1LUKGroup" style="display:flex;">
-                <div class="form-group">
-                    <label>幸運 (LUK) <span style="color:#ffcc00; font-weight:normal;">*決定三飛基礎與熟練*</span></label>
-                    <input type="number" id="p1LUK" value="1160" oninput="executeCalculation()">
-                </div>
-            </div>
-
-            <div class="flex-row" id="p1MinMaxGroup" style="display:none;">
-                <div class="form-group">
-                    <label>主技能小表 (Min)</label>
-                    <input type="number" id="p1Min" value="2942" oninput="executeCalculation()">
-                </div>
-                <div class="form-group">
-                    <label>主技能大表 (Max)</label>
-                    <input type="number" id="p1Max" value="5286" oninput="executeCalculation()">
-                </div>
-            </div>
-            
-            <div class="form-group checkbox-group" id="p1SEGroup">
-                <label><input type="checkbox" id="p1SE" onchange="executeCalculation()"> 💡 會心之眼30 (爆率+15%, 爆傷+140%)</label>
-            </div>
-            <div class="form-group checkbox-group" id="p1SIGroup">
-                <label class="si-label"><input type="checkbox" id="p1SI" onchange="executeCalculation()"> ⚡ 最終極速 (依職業動態套用增幅)</label>
-            </div>
-        </div>
-
-        <div class="panel panel-right">
-            <h3>玩家 B 配置</h3>
-            <div class="form-group">
-                <label>選擇輸出模式 <a href="#" class="edit-link" id="p2Edit" onclick="promptLevel('p2'); return false;">⚙️ 修改精準等級</a></label>
-                <select id="p2Mode" onchange="handleModeChange('p2')">
-                    <optgroup label="箭神 (Bowmaster)">
-                        <option value="bm_rf" selected>純暴風神射</option>
-                        <option value="bm_rf_ph">暴風神射 + 鳳凰</option>
-                    </optgroup>
-                    <optgroup label="夜使者 (Night Lord)">
-                        <option value="nl_tt30">三飛閃30 + 影分身 + 無形鏢</option>
-                        <option value="nl_tt20">三飛閃20 + 影分身 + 無形鏢</option>
-                    </optgroup>
-                    <optgroup label="英雄 (Hero)">
-                        <option value="hero_brandish">無雙劍舞30 260% + 進階鬥氣滿215%</option>
-                    </optgroup>
-                    <optgroup label="聖騎士 (Paladin)">
-                        <option value="paladin_blast">騎士衝擊波30 降魔 聖劍30[140%]</option>
-                        <option value="paladin_blast_fire">騎士衝擊波30 降魔 火劍30[120%]</option>
-                    </optgroup>
-                    <optgroup label="槍神 (Corsair)">
-                        <option value="cs_rf">純迅雷</option>
-                        <option value="cs_rf_octo">迅雷 + 4隻章魚</option>
-                        <option value="cs_rf_octo_hm">迅雷 + 4隻章魚 + 精準[數值]</option>
-                        <option value="cs_cannon">純加農砲</option>
-                        <option value="cs_cannon_octo">純加農砲 + 4隻章魚</option>
-                        <option value="cs_cannon_octo_hm">純加農砲 + 4隻章魚 + 精準[數值]</option>
-                    </optgroup>
-                </select>
-            </div>
-
-            <div class="form-group" id="p2MainLvlGroup">
-                <label>主技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
-                <input type="number" id="p2MainLvl" value="30" min="1" max="30" oninput="executeCalculation()">
-            </div>
-            
-            <div class="form-group" id="p2SummonLvlGroup" style="display:none;">
-                <label>鳳凰技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
-                <input type="number" id="p2SummonLvl" value="30" min="1" max="30" oninput="executeCalculation()">
-            </div>
-
-            <div class="flex-row">
-                <div class="form-group">
-                    <label>目標等級 (基準: 200)</label>
-                    <input type="number" id="p2TargetLvl" value="200" oninput="executeCalculation()">
-                </div>
-                <div class="form-group">
-                    <label>總武器攻擊力</label>
-                    <input type="number" id="p2WeaponAtt" value="156" oninput="executeCalculation()">
-                </div>
-            </div>
-
-            <div class="flex-row" id="p2LUKGroup" style="display:none;">
-                <div class="form-group">
-                    <label>幸運 (LUK) <span style="color:#ffcc00; font-weight:normal;">*決定三飛基礎與熟練*</span></label>
-                    <input type="number" id="p2LUK" value="1160" oninput="executeCalculation()">
-                </div>
-            </div>
-
-            <div class="flex-row" id="p2MinMaxGroup">
-                <div class="form-group">
-                    <label>主技能小表 (Min)</label>
-                    <input type="number" id="p2Min" value="5225" oninput="executeCalculation()">
-                </div>
-                <div class="form-group">
-                    <label>主技能大表 (Max)</label>
-                    <input type="number" id="p2Max" value="6407" oninput="executeCalculation()">
-                </div>
-            </div>
-            
-            <div class="form-group checkbox-group" id="p2SEGroup" style="display:none;">
-                <label><input type="checkbox" id="p2SE" onchange="executeCalculation()"> 💡 會心之眼30 (爆率+15%, 爆傷+140%)</label>
-            </div>
-            <div class="form-group checkbox-group" id="p2SIGroup">
-                <label class="si-label"><input type="checkbox" id="p2SI" onchange="executeCalculation()"> ⚡ 最終極速 (依職業動態套用增幅)</label>
-            </div>
-        </div>
-    </div>
-
-    <div class="result-panel" id="resultPanel">
-        <div class="diff-text" id="diffText"></div>
+    <div class="page-wrapper">
         
-        <div class="details-grid">
-            <div class="detail-box" id="p1Detail"></div>
-            <div class="detail-box right" id="p2Detail"></div>
+        <div class="manual-panel">
+            <h3>📖 使用說明書</h3>
+            
+            <div class="manual-step">
+                <h4>1️⃣ 選擇輸出模式</h4>
+                <p>在 <span class="highlight-text">[玩家 A]</span> 選擇你自己的職業與輸出配置，接著在 <span class="highlight-text">[玩家 B]</span> 選擇你想比較的對手。</p>
+            </div>
+            
+            <div class="manual-step">
+                <h4>2️⃣ 模擬對手面板</h4>
+                <p>不知道對手的實際大表與小表？直接輸入「目標等級」即可精準模擬！</p>
+                <span class="sub-text">💡 舉例：<br>你目前 150 等，就在左邊填 150。<br>對手 170 等，就在右邊填 170。<br>下方會即時顯示「(已模擬 Lv.150 面板)」，幫助你快速建立基準點。</span>
+            </div>
+            
+            <div class="manual-step">
+                <h4>3️⃣ 檢視差距與追趕目標</h4>
+                <p>設定完畢後，往下查看【輸出差距比對】，能大概觀察雙方的實戰差距。</p>
+                <span class="sub-text">🎯 最下方的「等效追趕需求」會精算出：玩家 B 調節後的大表攻約需撐到多少，總輸出才會與玩家 A 持平！</span>
+            </div>
         </div>
 
-        <div class="equiv-box" id="equivBox"></div>
+        <div class="content-area">
+            <div class="main-container">
+                <div class="panel panel-left">
+                    <h3>玩家 A 配置 [你]</h3>
+                    <div class="form-group">
+                        <label>選擇輸出模式 <a href="#" class="edit-link" id="p1Edit" onclick="promptLevel('p1'); return false;">⚙️ 修改精準等級</a></label>
+                        <select id="p1Mode" onchange="handleModeChange('p1')">
+                            <optgroup label="夜使者 (Night Lord)">
+                                <option value="nl_tt30">三飛閃30 + 影分身 + 無形鏢</option>
+                                <option value="nl_tt20">三飛閃20 + 影分身 + 無形鏢</option>
+                            </optgroup>
+                            <optgroup label="英雄 (Hero)">
+                                <option value="hero_brandish">無雙劍舞30 260% + 進階鬥氣滿215%</option>
+                            </optgroup>
+                            <optgroup label="聖騎士 (Paladin)">
+                                <option value="paladin_blast">騎士衝擊波30 降魔 聖劍30[140%]</option>
+                                <option value="paladin_blast_fire">騎士衝擊波30 降魔 火劍30[120%]</option>
+                            </optgroup>
+                            <optgroup label="槍神 (Corsair)">
+                                <option value="cs_rf">純迅雷</option>
+                                <option value="cs_rf_octo">迅雷 + 4隻章魚</option>
+                                <option value="cs_rf_octo_hm">迅雷 + 4隻章魚 + 精準[數值]</option>
+                                <option value="cs_cannon">純加農砲</option>
+                                <option value="cs_cannon_octo">純加農砲 + 4隻章魚</option>
+                                <option value="cs_cannon_octo_hm">純加農砲 + 4隻章魚 + 精準[數值]</option>
+                            </optgroup>
+                            <optgroup label="箭神 (Bowmaster)">
+                                <option value="bm_rf">純暴風神射</option>
+                                <option value="bm_rf_ph">暴風神射 + 鳳凰</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="p1MainLvlGroup" style="display:none;">
+                        <label>主技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                        <input type="number" id="p1MainLvl" value="30" min="1" max="30" oninput="executeCalculation()">
+                    </div>
+                    
+                    <div class="form-group" id="p1SummonLvlGroup" style="display:none;">
+                        <label>鳳凰技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                        <input type="number" id="p1SummonLvl" value="30" min="1" max="30" oninput="executeCalculation()">
+                    </div>
 
-        <div class="chart-container">
-            <canvas id="dpmChart"></canvas>
-        </div>
-    </div>
+                    <div class="flex-row">
+                        <div class="form-group">
+                            <label>目標等級 (基準: 200)</label>
+                            <input type="number" id="p1TargetLvl" value="200" oninput="executeCalculation()">
+                        </div>
+                        <div class="form-group">
+                            <label>總武器攻擊力</label>
+                            <input type="number" id="p1WeaponAtt" value="122" oninput="executeCalculation()">
+                        </div>
+                    </div>
 
-    <script>
+                    <div class="flex-row" id="p1LUKGroup" style="display:flex;">
+                        <div class="form-group">
+                            <label>幸運 (LUK) <span style="color:#ffcc00; font-weight:normal;">*決定三飛基礎與熟練*</span></label>
+                            <input type="number" id="p1LUK" value="1160" oninput="executeCalculation()">
+                        </div>
+                    </div>
+
+                    <div class="flex-row" id="p1MinMaxGroup" style="display:none;">
+                        <div class="form-group">
+                            <label>主技能小表 (Min)</label>
+                            <input type="number" id="p1Min" value="2942" oninput="executeCalculation()">
+                        </div>
+                        <div class="form-group">
+                            <label>主技能大表 (Max)</label>
+                            <input type="number" id="p1Max" value="5286" oninput="executeCalculation()">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group checkbox-group" id="p1SEGroup">
+                        <label><input type="checkbox" id="p1SE" onchange="executeCalculation()"> 💡 會心之眼30 (爆率+15%, 爆傷+140%)</label>
+                    </div>
+                    <div class="form-group checkbox-group" id="p1SIGroup">
+                        <label class="si-label"><input type="checkbox" id="p1SI" onchange="executeCalculation()"> ⚡ 最終極速 (依職業動態套用增幅)</label>
+                    </div>
+                </div>
+
+                <div class="panel panel-right">
+                    <h3>玩家 B 配置 [他]</h3>
+                    <div class="form-group">
+                        <label>選擇輸出模式 <a href="#" class="edit-link" id="p2Edit" onclick="promptLevel('p2'); return false;">⚙️ 修改精準等級</a></label>
+                        <select id="p2Mode" onchange="handleModeChange('p2')">
+                            <optgroup label="箭神 (Bowmaster)">
+                                <option value="bm_rf" selected>純暴風神射</option>
+                                <option value="bm_rf_ph">暴風神射 + 鳳凰</option>
+                            </optgroup>
+                            <optgroup label="夜使者 (Night Lord)">
+                                <option value="nl_tt30">三飛閃30 + 影分身 + 無形鏢</option>
+                                <option value="nl_tt20">三飛閃20 + 影分身 + 無形鏢</option>
+                            </optgroup>
+                            <optgroup label="英雄 (Hero)">
+                                <option value="hero_brandish">無雙劍舞30 260% + 進階鬥氣滿215%</option>
+                            </optgroup>
+                            <optgroup label="聖騎士 (Paladin)">
+                                <option value="paladin_blast">騎士衝擊波30 降魔 聖劍30[140%]</option>
+                                <option value="paladin_blast_fire">騎士衝擊波30 降魔 火劍30[120%]</option>
+                            </optgroup>
+                            <optgroup label="槍神 (Corsair)">
+                                <option value="cs_rf">純迅雷</option>
+                                <option value="cs_rf_octo">迅雷 + 4隻章魚</option>
+                                <option value="cs_rf_octo_hm">迅雷 + 4隻章魚 + 精準[數值]</option>
+                                <option value="cs_cannon">純加農砲</option>
+                                <option value="cs_cannon_octo">純加農砲 + 4隻章魚</option>
+                                <option value="cs_cannon_octo_hm">純加農砲 + 4隻章魚 + 精準[數值]</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="p2MainLvlGroup">
+                        <label>主技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                        <input type="number" id="p2MainLvl" value="30" min="1" max="30" oninput="executeCalculation()">
+                    </div>
+                    
+                    <div class="form-group" id="p2SummonLvlGroup" style="display:none;">
+                        <label>鳳凰技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                        <input type="number" id="p2SummonLvl" value="30" min="1" max="30" oninput="executeCalculation()">
+                    </div>
+
+                    <div class="flex-row">
+                        <div class="form-group">
+                            <label>目標等級 (基準: 200)</label>
+                            <input type="number" id="p2TargetLvl" value="200" oninput="executeCalculation()">
+                        </div>
+                        <div class="form-group">
+                            <label>總武器攻擊力</label>
+                            <input type="number" id="p2WeaponAtt" value="156" oninput="executeCalculation()">
+                        </div>
+                    </div>
+
+                    <div class="flex-row" id="p2LUKGroup" style="display:none;">
+                        <div class="form-group">
+                            <label>幸運 (LUK) <span style="color:#ffcc00; font-weight:normal;">*決定三飛基礎與熟練*</span></label>
+                            <input type="number" id="p2LUK" value="1160" oninput="executeCalculation()">
+                        </div>
+                    </div>
+
+                    <div class="flex-row" id="p2MinMaxGroup">
+                        <div class="form-group">
+                            <label>主技能小表 (Min)</label>
+                            <input type="number" id="p2Min" value="5225" oninput="executeCalculation()">
+                        </div>
+                        <div class="form-group">
+                            <label>主技能大表 (Max)</label>
+                            <input type="number" id="p2Max" value="6407" oninput="executeCalculation()">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group checkbox-group" id="p2SEGroup" style="display:none;">
+                        <label><input type="checkbox" id="p2SE" onchange="executeCalculation()"> 💡 會心之眼30 (爆率+15%, 爆傷+140%)</label>
+                    </div>
+                    <div class="form-group checkbox-group" id="p2SIGroup">
+                        <label class="si-label"><input type="checkbox" id="p2SI" onchange="executeCalculation()"> ⚡ 最終極速 (依職業動態套用增幅)</label>
+                    </div>
+                </div>
+            </div> <div class="result-panel" id="resultPanel">
+                <div class="diff-text" id="diffText"></div>
+                
+                <div class="details-grid">
+                    <div class="detail-box" id="p1Detail"></div>
+                    <div class="detail-box right" id="p2Detail"></div>
+                </div>
+
+                <div class="equiv-box" id="equivBox"></div>
+
+                <div class="chart-container">
+                    <canvas id="dpmChart"></canvas>
+                </div>
+            </div>
+        </div> </div> <script>
         const STORAGE_KEY = 'artale_oovs_state';
         
         let p1HmLevel = 20;
@@ -381,7 +442,6 @@
                 seGroup.style.display = 'block';
             }
 
-            // 夜使者專屬介面切換
             if (mode.startsWith('nl_')) {
                 lukGroup.style.display = 'flex';
                 minMaxGroup.style.display = 'none';
@@ -544,9 +604,6 @@
             return { adjMin: Math.round(adjMin), adjMax: Math.round(adjMax), rangeDiff: Math.round(rangeDiff) };
         }
 
-        // ============================================
-        // 等效大表逆推公式
-        // ============================================
         function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
             if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
@@ -761,7 +818,7 @@
             // ------------------ 聖騎士 (Paladin) ------------------
             else if (modeKey.startsWith('paladin_')) {
                 const isFire = modeKey === 'paladin_blast_fire';
-                const surfaceMult = isFire ? (1.2 * 1.5 * 1.1) : (1.4 * 1.1); // 1.98 vs 1.54
+                const surfaceMult = isFire ? (1.2 * 1.5 * 1.1) : (1.4 * 1.1); 
                 const minSurface = min * surfaceMult;
                 const maxSurface = max * surfaceMult;
                 const defReduction = 0.55 * 920; 
@@ -866,7 +923,7 @@
             const p1Max = Number(document.getElementById('p1Max').value);
             const p1TargetLvl = Number(document.getElementById('p1TargetLvl').value) || 200;
             const p1WeaponAtt = Number(document.getElementById('p1WeaponAtt').value) || 0;
-            const p1LUK = Number(document.getElementById('p1LUK').value) || 1200;
+            const p1LUK = Number(document.getElementById('p1LUK').value) || 1160;
             const p1MainLvl = Number(document.getElementById('p1MainLvl').value) || 30;
             const p1SummonLvl = Number(document.getElementById('p1SummonLvl').value) || 30;
             const p1SE = document.getElementById('p1SE').checked;
@@ -878,7 +935,7 @@
             const p2Max = Number(document.getElementById('p2Max').value);
             const p2TargetLvl = Number(document.getElementById('p2TargetLvl').value) || 200;
             const p2WeaponAtt = Number(document.getElementById('p2WeaponAtt').value) || 0;
-            const p2LUK = Number(document.getElementById('p2LUK').value) || 1200;
+            const p2LUK = Number(document.getElementById('p2LUK').value) || 1160;
             const p2MainLvl = Number(document.getElementById('p2MainLvl').value) || 30;
             const p2SummonLvl = Number(document.getElementById('p2SummonLvl').value) || 30;
             const p2SE = document.getElementById('p2SE').checked;
