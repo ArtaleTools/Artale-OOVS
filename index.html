@@ -30,13 +30,12 @@
         .page-wrapper {
             display: flex;
             width: 100%;
-            max-width: 1660px; /* 擴大外框以容納兩側空間 */
+            max-width: 1660px;
             gap: 30px;
             align-items: flex-start;
             justify-content: center;
         }
 
-        /* 隱形配重塊：用來平衡左側的說明書，確保中間主計算區塊絕對置中 */
         .page-wrapper::after {
             content: "";
             flex: 0 0 300px;
@@ -47,8 +46,8 @@
         .manual-panel {
             background-color: #2b2b36; padding: 25px; border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-            flex: 0 0 300px; /* 固定寬度 300px */
-            border-top: 5px solid #28a745; /* 綠色飾條 */
+            flex: 0 0 300px; 
+            border-top: 5px solid #28a745; 
             box-sizing: border-box;
         }
         .manual-panel h3 { margin-top: 0; color: #fff; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 20px; text-align: center;}
@@ -136,13 +135,11 @@
 
         .chart-container { position: relative; height: 350px; width: 100%; }
 
-        /* 響應式排版：螢幕若不夠放隱形配重塊，取消置中改為靠左 */
         @media (max-width: 1680px) {
             .page-wrapper::after { display: none; }
             .page-wrapper { max-width: 1350px; justify-content: flex-start; }
         }
 
-        /* 響應式排版：螢幕更小縮自動變成上下排列 */
         @media (max-width: 1350px) {
             .page-wrapper { flex-direction: column; align-items: center; }
             .manual-panel { flex: none; width: 100%; max-width: 1000px; margin-bottom: 20px; }
@@ -154,7 +151,7 @@
     <h2>Artale OOVS [海怒斯單體] <span class="author-tag">(資料來源及作者: Philip)</span></h2>
     
     <div class="header-section">
-        <p class="update-time">最後更新時間：2026-04-06 16:15</p>
+        <p class="update-time">最後更新時間：2026-04-06 16:30</p>
         <button class="btn-reset" onclick="resetData()">🔄 還原初始化設定</button>
     </div>
 
@@ -235,21 +232,14 @@
                         </div>
                     </div>
 
-                    <div class="flex-row" id="p1LUKGroup" style="display:flex;">
-                        <div class="form-group">
-                            <label>幸運 (LUK) <span style="color:#ffcc00; font-weight:normal;">*決定三飛基礎與熟練*</span></label>
-                            <input type="number" id="p1LUK" value="1160" oninput="executeCalculation()">
-                        </div>
-                    </div>
-
-                    <div class="flex-row" id="p1MinMaxGroup" style="display:none;">
+                    <div class="flex-row">
                         <div class="form-group">
                             <label>主技能小表 (Min)</label>
-                            <input type="number" id="p1Min" value="2942" oninput="executeCalculation()">
+                            <input type="number" id="p1Min" value="3000" oninput="executeCalculation()">
                         </div>
                         <div class="form-group">
                             <label>主技能大表 (Max)</label>
-                            <input type="number" id="p1Max" value="5286" oninput="executeCalculation()">
+                            <input type="number" id="p1Max" value="5343" oninput="executeCalculation()">
                         </div>
                     </div>
                     
@@ -313,14 +303,7 @@
                         </div>
                     </div>
 
-                    <div class="flex-row" id="p2LUKGroup" style="display:none;">
-                        <div class="form-group">
-                            <label>幸運 (LUK) <span style="color:#ffcc00; font-weight:normal;">*決定三飛基礎與熟練*</span></label>
-                            <input type="number" id="p2LUK" value="1160" oninput="executeCalculation()">
-                        </div>
-                    </div>
-
-                    <div class="flex-row" id="p2MinMaxGroup">
+                    <div class="flex-row">
                         <div class="form-group">
                             <label>主技能小表 (Min)</label>
                             <input type="number" id="p2Min" value="5225" oninput="executeCalculation()">
@@ -373,7 +356,6 @@
                     document.getElementById('p1SummonLvl').value = state.p1SummonLvl;
                     document.getElementById('p1TargetLvl').value = state.p1TargetLvl;
                     document.getElementById('p1WeaponAtt').value = state.p1WeaponAtt;
-                    document.getElementById('p1LUK').value = state.p1LUK || 1160;
                     document.getElementById('p1Min').value = state.p1Min;
                     document.getElementById('p1Max').value = state.p1Max;
                     document.getElementById('p1SE').checked = state.p1SE;
@@ -384,7 +366,6 @@
                     document.getElementById('p2SummonLvl').value = state.p2SummonLvl;
                     document.getElementById('p2TargetLvl').value = state.p2TargetLvl;
                     document.getElementById('p2WeaponAtt').value = state.p2WeaponAtt;
-                    document.getElementById('p2LUK').value = state.p2LUK || 1160;
                     document.getElementById('p2Min').value = state.p2Min;
                     document.getElementById('p2Max').value = state.p2Max;
                     document.getElementById('p2SE').checked = state.p2SE;
@@ -405,7 +386,6 @@
                 p1SummonLvl: document.getElementById('p1SummonLvl').value,
                 p1TargetLvl: document.getElementById('p1TargetLvl').value,
                 p1WeaponAtt: document.getElementById('p1WeaponAtt').value,
-                p1LUK: document.getElementById('p1LUK').value,
                 p1Min: document.getElementById('p1Min').value,
                 p1Max: document.getElementById('p1Max').value,
                 p1SE: document.getElementById('p1SE').checked,
@@ -415,7 +395,6 @@
                 p2SummonLvl: document.getElementById('p2SummonLvl').value,
                 p2TargetLvl: document.getElementById('p2TargetLvl').value,
                 p2WeaponAtt: document.getElementById('p2WeaponAtt').value,
-                p2LUK: document.getElementById('p2LUK').value,
                 p2Min: document.getElementById('p2Min').value,
                 p2Max: document.getElementById('p2Max').value,
                 p2SE: document.getElementById('p2SE').checked,
@@ -438,8 +417,6 @@
             const summonLvlGroup = document.getElementById(player + 'SummonLvlGroup');
             const seGroup = document.getElementById(player + 'SEGroup');
             const siGroup = document.getElementById(player + 'SIGroup');
-            const lukGroup = document.getElementById(player + 'LUKGroup');
-            const minMaxGroup = document.getElementById(player + 'MinMaxGroup');
 
             editBtn.style.display = mode.endsWith('_hm') ? 'inline-block' : 'none';
             summonLvlGroup.style.display = (mode === 'bm_rf_ph') ? 'block' : 'none';
@@ -450,26 +427,16 @@
                 mainLvlGroup.style.display = 'block';
             }
 
-            // SE (會心之眼) 顯示邏輯：箭神自帶，故隱藏
             if (mode.startsWith('bm_')) {
                 seGroup.style.display = 'none';
             } else {
                 seGroup.style.display = 'block';
             }
 
-            // SI (最終極速) 顯示邏輯：箭神(暴風)與夜使者(三飛)為固定延遲，故隱藏
             if (mode.startsWith('bm_') || mode.startsWith('nl_')) {
                 siGroup.style.display = 'none';
             } else {
                 siGroup.style.display = 'block';
-            }
-
-            if (mode.startsWith('nl_')) {
-                lukGroup.style.display = 'flex';
-                minMaxGroup.style.display = 'none';
-            } else {
-                lukGroup.style.display = 'none';
-                minMaxGroup.style.display = 'flex';
             }
         }
 
@@ -483,7 +450,6 @@
                 const maxEl = document.getElementById(player + 'Max');
                 const weaponAttEl = document.getElementById(player + 'WeaponAtt');
                 const targetLvlEl = document.getElementById(player + 'TargetLvl');
-                const lukEl = document.getElementById(player + 'LUK');
                 
                 targetLvlEl.value = 200;
 
@@ -497,7 +463,6 @@
                     minEl.value = 4808; maxEl.value = 8789; weaponAttEl.value = 149;
                 } else if (newClassPrefix === 'nl') {
                     minEl.value = 3000; maxEl.value = 5343; weaponAttEl.value = 122;
-                    lukEl.value = 1160;
                 }
                 currentClass[player] = newClassPrefix;
             }
@@ -578,7 +543,7 @@
             'cs_rf_octo_hm': "迅雷 + 4隻章魚 + 精準目標",
             'cs_cannon': "純加農砲",
             'cs_cannon_octo': "純加農砲 + 4隻章魚",
-            'cs_cannon_octo_hm': "純加農砲 + 4隻章 গৌ + 精準目標"
+            'cs_cannon_octo_hm': "純加農砲 + 4隻章魚 + 精準目標"
         };
 
         function getCorsairBaseDpm(modeKey, skillLvl, hmLevel) {
@@ -685,14 +650,14 @@
                 if (mainDpm < 0) mainDpm = 0;
 
                 const isTT30 = modeKey === 'nl_tt30';
+                const baseDpmAnchor = isTT30 ? 5544788 : 5082638;
+                
                 const baseSkillMult = isTT30 ? 2.0 : 1.8333;
                 const seSkillMult = isTT30 ? 3.06 : 2.8933;
                 const seMult = hasSE ? (seSkillMult / baseSkillMult) : 1;
 
                 mainDpm /= seMult;
-
-                const baseAnchorDpm = isTT30 ? 5544788 : 5082638;
-                const scale = mainDpm / baseAnchorDpm;
+                const scale = mainDpm / baseDpmAnchor;
                 
                 const targetAvg = scale * NL_ANCHOR_AVG; 
                 return Math.round(targetAvg * (5343 / NL_ANCHOR_AVG));
@@ -706,6 +671,7 @@
             const { adjMin: min, adjMax: max, rangeDiff } = getAdjustedRange(rawMin, rawMax, modeKey, levelDiff, weaponAtt);
             const levelAdjNote = `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已模擬 Lv.${targetLvl} 面板：調節 ${min} ~ ${max})</div>`;
 
+            // ------------------ 槍神 (Corsair) ------------------
             if (modeKey.startsWith('cs_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / CS_BASE_AVG; 
@@ -759,6 +725,8 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             } 
+            
+            // ------------------ 箭神 (Bowmaster) ------------------
             else if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
                 const inputAvg = (min + max) / 2;
@@ -797,6 +765,8 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             }
+            
+            // ------------------ 英雄 (Hero) ------------------
             else if (modeKey.startsWith('hero_')) {
                 const surfaceMult = 2.15; 
                 const minSurface = min * surfaceMult;
@@ -835,6 +805,8 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用實測底層公式，已自動扣除魚王防禦)</p>`
                 };
             }
+            
+            // ------------------ 聖騎士 (Paladin) ------------------
             else if (modeKey.startsWith('paladin_')) {
                 const isFire = modeKey === 'paladin_blast_fire';
                 const surfaceMult = isFire ? (1.2 * 1.5 * 1.1) : (1.4 * 1.1); 
@@ -877,6 +849,8 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用實測底層公式，已自動扣除 920 魚王防禦)</p>`
                 };
             }
+            
+            // ------------------ 夜使者 (Night Lord) ------------------
             else if (modeKey.startsWith('nl_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / NL_ANCHOR_AVG; 
