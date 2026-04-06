@@ -91,7 +91,7 @@
 <body>
 
     <h2>Artale OOVS <span class="author-tag">(資料來源及作者: Philip)</span></h2>
-    <p class="update-time">最後更新時間：2026-04-06 14:00</p>
+    <p class="update-time">最後更新時間：2026-04-06 14:05</p>
 
     <div class="main-container">
         <div class="panel panel-left">
@@ -365,7 +365,7 @@
 
         const CS_BASE_AVG = 4828.5;
         const HERO_BASE_AVG = 6798.5; 
-        const NL_ANCHOR_AVG = 4171.5; // 夜使者 3000~5343 基準面板平均
+        const NL_ANCHOR_AVG = 4171.5; 
 
         const BM_MODES = {
             'bm_rf': { name: "純暴風神射", hasPhoenix: false },
@@ -497,9 +497,9 @@
             
             const levelDiff = targetLvl - 200;
             const { adjMin: min, adjMax: max, rangeDiff } = getAdjustedRange(rawMin, rawMax, modeKey, levelDiff, weaponAtt);
-            const levelAdjNote = levelDiff !== 0 ? `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已模擬 Lv.${targetLvl} 面板：調節 ${min} ~ ${max})</div>` : '';
+            // 永遠顯示模擬與調節後的面板
+            const levelAdjNote = `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已模擬 Lv.${targetLvl} 面板：調節 ${min} ~ ${max})</div>`;
 
-            // ------------------ 槍神 (Corsair) ------------------
             if (modeKey.startsWith('cs_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / CS_BASE_AVG; 
@@ -553,8 +553,6 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             } 
-            
-            // ------------------ 箭神 (Bowmaster) ------------------
             else if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
                 const inputAvg = (min + max) / 2;
@@ -594,8 +592,6 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             }
-            
-            // ------------------ 英雄 (Hero) ------------------
             else if (modeKey.startsWith('hero_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / HERO_BASE_AVG; 
@@ -629,8 +625,6 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             }
-            
-            // ------------------ 夜使者 (Night Lord) ------------------
             else if (modeKey.startsWith('nl_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / NL_ANCHOR_AVG; 
