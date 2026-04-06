@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artale OOVS</title>
+    <title>Artale OOVS [海怒斯單體]</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -16,8 +16,16 @@
             display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
         }
         .author-tag { font-size: 16px; color: #aaa; font-weight: normal; letter-spacing: 0; }
-        .update-time { color: #888; font-size: 0.9em; text-align: center; margin-top: 0; margin-bottom: 30px; letter-spacing: 1px; }
         
+        .header-section { text-align: center; margin-bottom: 30px; }
+        .update-time { color: #888; font-size: 0.9em; margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; }
+        
+        .btn-reset {
+            background-color: #ff4d4d; color: white; border: none; padding: 8px 16px; border-radius: 6px;
+            cursor: pointer; font-size: 0.9em; font-weight: bold; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .btn-reset:hover { background-color: #ff3333; transform: scale(1.05); }
+
         .main-container {
             display: flex; flex-wrap: wrap; gap: 30px; width: 100%; max-width: 1000px; justify-content: center;
         }
@@ -90,8 +98,12 @@
 </head>
 <body>
 
-    <h2>Artale OOVS <span class="author-tag">(資料來源及作者: Philip)</span></h2>
-    <p class="update-time">最後更新時間：2026-04-06 14:05</p>
+    <h2>Artale OOVS [海怒斯單體] <span class="author-tag">(資料來源及作者: Philip)</span></h2>
+    
+    <div class="header-section">
+        <p class="update-time">最後更新時間：2026-04-06 14:15</p>
+        <button class="btn-reset" onclick="resetData()">🔄 還原初始化設定</button>
+    </div>
 
     <div class="main-container">
         <div class="panel panel-left">
@@ -245,10 +257,82 @@
     </div>
 
     <script>
+        const STORAGE_KEY = 'artale_oovs_state';
+        
         let p1HmLevel = 20;
         let p2HmLevel = 20;
-
         let currentClass = { p1: 'nl', p2: 'bm' };
+
+        // 讀取本地儲存的設定
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    p1HmLevel = state.p1HmLevel || 20;
+                    p2HmLevel = state.p2HmLevel || 20;
+                    currentClass = state.currentClass || { p1: 'nl', p2: 'bm' };
+
+                    document.getElementById('p1Mode').value = state.p1Mode;
+                    document.getElementById('p1MainLvl').value = state.p1MainLvl;
+                    document.getElementById('p1SummonLvl').value = state.p1SummonLvl;
+                    document.getElementById('p1TargetLvl').value = state.p1TargetLvl;
+                    document.getElementById('p1WeaponAtt').value = state.p1WeaponAtt;
+                    document.getElementById('p1Min').value = state.p1Min;
+                    document.getElementById('p1Max').value = state.p1Max;
+                    document.getElementById('p1SE').checked = state.p1SE;
+                    document.getElementById('p1SI').checked = state.p1SI;
+
+                    document.getElementById('p2Mode').value = state.p2Mode;
+                    document.getElementById('p2MainLvl').value = state.p2MainLvl;
+                    document.getElementById('p2SummonLvl').value = state.p2SummonLvl;
+                    document.getElementById('p2TargetLvl').value = state.p2TargetLvl;
+                    document.getElementById('p2WeaponAtt').value = state.p2WeaponAtt;
+                    document.getElementById('p2Min').value = state.p2Min;
+                    document.getElementById('p2Max').value = state.p2Max;
+                    document.getElementById('p2SE').checked = state.p2SE;
+                    document.getElementById('p2SI').checked = state.p2SI;
+                } catch(e) {
+                    console.error("無法讀取存檔資料", e);
+                }
+            }
+        }
+
+        // 儲存設定至本地端
+        function saveData() {
+            const state = {
+                p1HmLevel: p1HmLevel,
+                p2HmLevel: p2HmLevel,
+                currentClass: currentClass,
+                p1Mode: document.getElementById('p1Mode').value,
+                p1MainLvl: document.getElementById('p1MainLvl').value,
+                p1SummonLvl: document.getElementById('p1SummonLvl').value,
+                p1TargetLvl: document.getElementById('p1TargetLvl').value,
+                p1WeaponAtt: document.getElementById('p1WeaponAtt').value,
+                p1Min: document.getElementById('p1Min').value,
+                p1Max: document.getElementById('p1Max').value,
+                p1SE: document.getElementById('p1SE').checked,
+                p1SI: document.getElementById('p1SI').checked,
+                p2Mode: document.getElementById('p2Mode').value,
+                p2MainLvl: document.getElementById('p2MainLvl').value,
+                p2SummonLvl: document.getElementById('p2SummonLvl').value,
+                p2TargetLvl: document.getElementById('p2TargetLvl').value,
+                p2WeaponAtt: document.getElementById('p2WeaponAtt').value,
+                p2Min: document.getElementById('p2Min').value,
+                p2Max: document.getElementById('p2Max').value,
+                p2SE: document.getElementById('p2SE').checked,
+                p2SI: document.getElementById('p2SI').checked
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+
+        // 還原預設值
+        function resetData() {
+            if (confirm("確定要清除所有設定並還原至初始化狀態嗎？")) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
 
         function updateVisibility(player) {
             const mode = document.getElementById(player + 'Mode').value;
@@ -410,9 +494,6 @@
             return { currentMainBase, summonBase, skillPct, mainBase };
         }
 
-        // ============================================
-        // 等級調節轉換公式
-        // ============================================
         function getAdjustedRange(min, max, mode, levelDiff, weaponAtt) {
             if (levelDiff === 0 || weaponAtt <= 0) return { adjMin: min, adjMax: max, rangeDiff: 0 };
 
@@ -430,9 +511,6 @@
             return { adjMin: Math.round(adjMin), adjMax: Math.round(adjMax), rangeDiff: Math.round(rangeDiff) };
         }
 
-        // ============================================
-        // 等效大表逆推公式
-        // ============================================
         function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
             if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
@@ -497,7 +575,6 @@
             
             const levelDiff = targetLvl - 200;
             const { adjMin: min, adjMax: max, rangeDiff } = getAdjustedRange(rawMin, rawMax, modeKey, levelDiff, weaponAtt);
-            // 永遠顯示模擬與調節後的面板
             const levelAdjNote = `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已模擬 Lv.${targetLvl} 面板：調節 ${min} ~ ${max})</div>`;
 
             if (modeKey.startsWith('cs_')) {
@@ -777,9 +854,24 @@
             });
             
             document.getElementById('resultPanel').classList.add('active');
+            
+            saveData();
         }
 
         window.onload = function() {
+            loadData();
+
+            const updateSelectText = (player) => {
+                const selectEl = document.getElementById(player + 'Mode');
+                Array.from(selectEl.options).forEach(opt => {
+                    if (opt.value.endsWith('_hm')) {
+                        opt.text = opt.text.replace(/精準\[\d+\]|精準\[數值\]/, `精準[${player === 'p1' ? p1HmLevel : p2HmLevel}]`);
+                    }
+                });
+            };
+            updateSelectText('p1');
+            updateSelectText('p2');
+
             updateVisibility('p1');
             updateVisibility('p2');
             executeCalculation();
