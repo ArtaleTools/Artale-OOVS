@@ -87,7 +87,7 @@
 <body>
 
     <h2>Artale OOVS</h2>
-    <p class="update-time">最後更新時間：2026-04-06 10:10</p>
+    <p class="update-time">最後更新時間：2026-04-06 10:15</p>
 
     <div class="main-container">
         <div class="panel panel-left">
@@ -128,8 +128,8 @@
 
             <div class="flex-row">
                 <div class="form-group">
-                    <label>等級調節 (-1, +2...)</label>
-                    <input type="number" id="p1LevelDiff" value="0" oninput="executeCalculation()">
+                    <label>目標等級 (基準: 200)</label>
+                    <input type="number" id="p1TargetLvl" value="200" oninput="executeCalculation()">
                 </div>
                 <div class="form-group">
                     <label>總武器攻擊力</label>
@@ -194,8 +194,8 @@
 
             <div class="flex-row">
                 <div class="form-group">
-                    <label>等級調節 (-1, +2...)</label>
-                    <input type="number" id="p2LevelDiff" value="0" oninput="executeCalculation()">
+                    <label>目標等級 (基準: 200)</label>
+                    <input type="number" id="p2TargetLvl" value="200" oninput="executeCalculation()">
                 </div>
                 <div class="form-group">
                     <label>總武器攻擊力</label>
@@ -276,7 +276,11 @@
                 const minEl = document.getElementById(player + 'Min');
                 const maxEl = document.getElementById(player + 'Max');
                 const weaponAttEl = document.getElementById(player + 'WeaponAtt');
+                const targetLvlEl = document.getElementById(player + 'TargetLvl');
                 
+                // 重置基準等級為 200
+                targetLvlEl.value = 200;
+
                 if (newClassPrefix === 'cs') {
                     minEl.value = 3429; maxEl.value = 6228; weaponAttEl.value = 142;
                 } else if (newClassPrefix === 'bm') {
@@ -326,6 +330,10 @@
             executeCalculation(); 
         }
 
+        // ============================================
+        // 技能等級倍率與基礎設定
+        // ============================================
+        
         function getRfPercent(lvl) {
             lvl = Math.max(1, Math.min(30, lvl));
             if (lvl <= 10) return 100 + lvl * 2;       
@@ -397,6 +405,9 @@
             return { currentMainBase, summonBase, skillPct, mainBase };
         }
 
+        // ============================================
+        // 等級調節轉換公式
+        // ============================================
         function getAdjustedRange(min, max, mode, levelDiff, weaponAtt) {
             if (levelDiff === 0 || weaponAtt <= 0) return { adjMin: min, adjMax: max, rangeDiff: 0 };
 
@@ -414,6 +425,9 @@
             return { adjMin: Math.round(adjMin), adjMax: Math.round(adjMax), rangeDiff: Math.round(rangeDiff) };
         }
 
+        // ============================================
+        // 等效大表逆推公式
+        // ============================================
         function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
             if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
@@ -472,10 +486,11 @@
             return 0;
         }
 
-        function calculateDPM(modeKey, rawMin, rawMax, levelDiff, weaponAtt, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
+        function calculateDPM(modeKey, rawMin, rawMax, targetLvl, weaponAtt, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
             
+            const levelDiff = targetLvl - 200;
             const { adjMin: min, adjMax: max, rangeDiff } = getAdjustedRange(rawMin, rawMax, modeKey, levelDiff, weaponAtt);
-            const levelAdjNote = levelDiff !== 0 ? `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已套用等級差 ${levelDiff > 0 ? '+'+levelDiff : levelDiff}：面板調節 ${min} ~ ${max})</div>` : '';
+            const levelAdjNote = levelDiff !== 0 ? `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已模擬 Lv.${targetLvl} 面板：調節 ${min} ~ ${max})</div>` : '';
 
             if (modeKey.startsWith('cs_')) {
                 const inputAvg = (min + max) / 2;
@@ -644,24 +659,24 @@
             const p1Mode = document.getElementById('p1Mode').value;
             const p1Min = Number(document.getElementById('p1Min').value);
             const p1Max = Number(document.getElementById('p1Max').value);
-            const p1LevelDiff = Number(document.getElementById('p1LevelDiff').value) || 0;
+            const p1TargetLvl = Number(document.getElementById('p1TargetLvl').value) || 200;
             const p1WeaponAtt = Number(document.getElementById('p1WeaponAtt').value) || 0;
             const p1MainLvl = Number(document.getElementById('p1MainLvl').value) || 30;
             const p1SummonLvl = Number(document.getElementById('p1SummonLvl').value) || 30;
             const p1SE = document.getElementById('p1SE').checked;
             const p1SI = document.getElementById('p1SI').checked;
-            const p1Result = calculateDPM(p1Mode, p1Min, p1Max, p1LevelDiff, p1WeaponAtt, p1HmLevel, p1MainLvl, p1SummonLvl, p1SE, p1SI);
+            const p1Result = calculateDPM(p1Mode, p1Min, p1Max, p1TargetLvl, p1WeaponAtt, p1HmLevel, p1MainLvl, p1SummonLvl, p1SE, p1SI);
 
             const p2Mode = document.getElementById('p2Mode').value;
             const p2Min = Number(document.getElementById('p2Min').value);
             const p2Max = Number(document.getElementById('p2Max').value);
-            const p2LevelDiff = Number(document.getElementById('p2LevelDiff').value) || 0;
+            const p2TargetLvl = Number(document.getElementById('p2TargetLvl').value) || 200;
             const p2WeaponAtt = Number(document.getElementById('p2WeaponAtt').value) || 0;
             const p2MainLvl = Number(document.getElementById('p2MainLvl').value) || 30;
             const p2SummonLvl = Number(document.getElementById('p2SummonLvl').value) || 30;
             const p2SE = document.getElementById('p2SE').checked;
             const p2SI = document.getElementById('p2SI').checked;
-            const p2Result = calculateDPM(p2Mode, p2Min, p2Max, p2LevelDiff, p2WeaponAtt, p2HmLevel, p2MainLvl, p2SummonLvl, p2SE, p2SI);
+            const p2Result = calculateDPM(p2Mode, p2Min, p2Max, p2TargetLvl, p2WeaponAtt, p2HmLevel, p2MainLvl, p2SummonLvl, p2SE, p2SI);
 
             document.getElementById('p1Detail').innerHTML = `
                 <h4>[玩家 A] ${p1Result.name}</h4>
