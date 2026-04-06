@@ -154,7 +154,7 @@
     <h2>Artale OOVS [海怒斯單體] <span class="author-tag">(資料來源及作者: Philip)</span></h2>
     
     <div class="header-section">
-        <p class="update-time">最後更新時間：2026-04-06 15:45</p>
+        <p class="update-time">最後更新時間：2026-04-06 16:00</p>
         <button class="btn-reset" onclick="resetData()">🔄 還原初始化設定</button>
     </div>
 
@@ -588,9 +588,6 @@
             return { adjMin: Math.round(adjMin), adjMax: Math.round(adjMax), rangeDiff: Math.round(rangeDiff) };
         }
 
-        // ============================================
-        // 等效大表逆推公式
-        // ============================================
         function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
             if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
@@ -650,7 +647,7 @@
 
                 const isTT30 = modeKey === 'nl_tt30';
                 const baseSkillMult = isTT30 ? 2.0 : 1.8333;
-                const seSkillMult = isTT30 ? 2.41 : 2.2433;
+                const seSkillMult = isTT30 ? 3.06 : 2.8933;
                 const seMult = hasSE ? (seSkillMult / baseSkillMult) : 1;
 
                 mainDpm /= seMult;
@@ -670,7 +667,6 @@
             const { adjMin: min, adjMax: max, rangeDiff } = getAdjustedRange(rawMin, rawMax, modeKey, levelDiff, weaponAtt);
             const levelAdjNote = `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已模擬 Lv.${targetLvl} 面板：調節 ${min} ~ ${max})</div>`;
 
-            // ------------------ 槍神 (Corsair) ------------------
             if (modeKey.startsWith('cs_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / CS_BASE_AVG; 
@@ -724,8 +720,6 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             } 
-            
-            // ------------------ 箭神 (Bowmaster) ------------------
             else if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
                 const inputAvg = (min + max) / 2;
@@ -765,8 +759,6 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             }
-            
-            // ------------------ 英雄 (Hero) ------------------
             else if (modeKey.startsWith('hero_')) {
                 const surfaceMult = 2.15; 
                 const minSurface = min * surfaceMult;
@@ -805,8 +797,6 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用實測底層公式，已自動扣除魚王防禦)</p>`
                 };
             }
-            
-            // ------------------ 聖騎士 (Paladin) ------------------
             else if (modeKey.startsWith('paladin_')) {
                 const isFire = modeKey === 'paladin_blast_fire';
                 const surfaceMult = isFire ? (1.2 * 1.5 * 1.1) : (1.4 * 1.1); 
@@ -849,8 +839,6 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用實測底層公式，已自動扣除 920 魚王防禦)</p>`
                 };
             }
-            
-            // ------------------ 夜使者 (Night Lord) ------------------
             else if (modeKey.startsWith('nl_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / NL_ANCHOR_AVG; 
@@ -860,7 +848,7 @@
                 const baseHitAnchor = isTT30 ? 12322 : 11295;
                 
                 const baseSkillMult = isTT30 ? 2.0 : 1.8333;
-                const seSkillMult = isTT30 ? 2.41 : 2.2433;
+                const seSkillMult = isTT30 ? 3.06 : 2.8933; // 修正的正確會心期望倍率
                 const seMult = hasSE ? (seSkillMult / baseSkillMult) : 1;
                 
                 const mainDpm = Math.floor(baseDpmAnchor * scale * seMult);
@@ -961,18 +949,20 @@
             let showEqBox = false;
 
             if (diff > 0) {
+                const p1LevelDiff = p1TargetLvl - 200;
                 const eqA = getEquivalentRange(p2Result.totalDpm, p1Mode, p1HmLevel, p1MainLvl, p1SummonLvl, p1SE, p1SI);
                 const gap = eqA - p1Result.adjMax; 
-                const tableNameA = p1Mode.startsWith('nl_') ? '調節後大表' : '調節後大表';
+                const tableNameA = '調節後大表';
                 eqHtml += `<p>要達到 玩家 B (${classNameB}) 的總輸出，玩家 A (${classNameA}) ${tableNameA}約需撐到：<span class="eq-val">${eqA.toLocaleString()}</span></p>`;
                 if (gap > 0) {
                     eqHtml += `<p class="gap-val">(距離當前${tableNameA}還差：<strong>${gap.toLocaleString()}</strong>)</p>`;
                 }
                 showEqBox = true;
             } else if (diff < 0) {
+                const p2LevelDiff = p2TargetLvl - 200;
                 const eqB = getEquivalentRange(p1Result.totalDpm, p2Mode, p2HmLevel, p2MainLvl, p2SummonLvl, p2SE, p2SI);
                 const gap = eqB - p2Result.adjMax; 
-                const tableNameB = p2Mode.startsWith('nl_') ? '調節後大表' : '調節後大表';
+                const tableNameB = '調節後大表';
                 eqHtml += `<p>要達到 玩家 A (${classNameA}) 的總輸出，玩家 B (${classNameB}) ${tableNameB}約需撐到：<span class="eq-val">${eqB.toLocaleString()}</span></p>`;
                 if (gap > 0) {
                     eqHtml += `<p class="gap-val">(距離當前${tableNameB}還差：<strong>${gap.toLocaleString()}</strong>)</p>`;
