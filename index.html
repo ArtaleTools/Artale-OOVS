@@ -101,7 +101,7 @@
     <h2>Artale OOVS [海怒斯單體] <span class="author-tag">(資料來源及作者: Philip)</span></h2>
     
     <div class="header-section">
-        <p class="update-time">最後更新時間：2026-04-06 15:10</p>
+        <p class="update-time">最後更新時間：2026-04-06 15:30</p>
         <button class="btn-reset" onclick="resetData()">🔄 還原初始化設定</button>
     </div>
 
@@ -120,6 +120,7 @@
                     </optgroup>
                     <optgroup label="聖騎士 (Paladin)">
                         <option value="paladin_blast">騎士衝擊波30 降魔 聖劍30[140%]</option>
+                        <option value="paladin_blast_fire">騎士衝擊波30 降魔 火劍30[120%]</option>
                     </optgroup>
                     <optgroup label="槍神 (Corsair)">
                         <option value="cs_rf">純迅雷</option>
@@ -196,6 +197,13 @@
                         <option value="nl_tt30">三飛閃30 + 影分身 + 無形鏢</option>
                         <option value="nl_tt20">三飛閃20 + 影分身 + 無形鏢</option>
                     </optgroup>
+                    <optgroup label="英雄 (Hero)">
+                        <option value="hero_brandish">無雙劍舞30 260% + 進階鬥氣滿215%</option>
+                    </optgroup>
+                    <optgroup label="聖騎士 (Paladin)">
+                        <option value="paladin_blast">騎士衝擊波30 降魔 聖劍30[140%]</option>
+                        <option value="paladin_blast_fire">騎士衝擊波30 降魔 火劍30[120%]</option>
+                    </optgroup>
                     <optgroup label="槍神 (Corsair)">
                         <option value="cs_rf">純迅雷</option>
                         <option value="cs_rf_octo">迅雷 + 4隻章魚</option>
@@ -203,12 +211,6 @@
                         <option value="cs_cannon">純加農砲</option>
                         <option value="cs_cannon_octo">純加農砲 + 4隻章魚</option>
                         <option value="cs_cannon_octo_hm">純加農砲 + 4隻章魚 + 精準[數值]</option>
-                    </optgroup>
-                    <optgroup label="英雄 (Hero)">
-                        <option value="hero_brandish">無雙劍舞30 260% + 進階鬥氣滿215%</option>
-                    </optgroup>
-                    <optgroup label="聖騎士 (Paladin)">
-                        <option value="paladin_blast">騎士衝擊波30 降魔 聖劍30[140%]</option>
                     </optgroup>
                 </select>
             </div>
@@ -408,7 +410,7 @@
                 } else if (newClassPrefix === 'bm') {
                     minEl.value = 5225; maxEl.value = 6407; weaponAttEl.value = 156;
                 } else if (newClassPrefix === 'hero') {
-                    minEl.value = 4808; maxEl.value = 8789; weaponAttEl.value = 149;
+                    minEl.value = 5035; maxEl.value = 9202; weaponAttEl.value = 156;
                 } else if (newClassPrefix === 'paladin') {
                     minEl.value = 4808; maxEl.value = 8789; weaponAttEl.value = 149;
                 } else if (newClassPrefix === 'nl') {
@@ -479,7 +481,8 @@
         }
 
         const CS_BASE_AVG = 4828.5;
-        const HERO_BASE_AVG = 6798.5; // (4808+8789)/2
+        const HERO_BASE_AVG = 6798.5; 
+        const NL_ANCHOR_AVG = 4171.5; 
 
         const BM_MODES = {
             'bm_rf': { name: "純暴風神射", hasPhoenix: false },
@@ -542,18 +545,21 @@
         }
 
         // ============================================
-        // 等效大表逆推公式 (修正表攻乘區換算)
+        // 等效大表逆推公式
         // ============================================
-        function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl, hasSE, hasSI, luk, levelDiff) {
+        function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
             if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
                 let mainDpm = targetDpm;
+                
                 if (cfg.hasPhoenix) {
                     const summonPct = getPhoenixPercent(summonLvl);
                     mainDpm -= Math.floor(221528 * (summonPct / 550));
                 }
                 if (mainDpm < 0) mainDpm = 0;
+                
                 const baseTargetDpm = 7321100; 
+                
                 const mainPct = getBmRfPercent(mainLvl);
                 const scale = (mainDpm / baseTargetDpm) / (mainPct / 110);
                 const targetAvg = scale * 5816; 
@@ -561,11 +567,14 @@
             } 
             else if (modeKey.startsWith('cs_')) {
                 const { currentMainBase, summonBase, skillPct } = getCorsairBaseDpm(modeKey, mainLvl, hmLevel);
+                
                 let effectiveMainBase = currentMainBase;
                 if (hasSE) effectiveMainBase *= ((skillPct + 21) / skillPct); 
                 if (hasSI && modeKey.includes('cannon')) effectiveMainBase *= 1.05; 
+                
                 const baseTotal = effectiveMainBase + summonBase;
                 if (baseTotal === 0) return 0;
+
                 const scale = targetDpm / baseTotal;
                 const targetAvg = scale * CS_BASE_AVG;
                 return Math.round(targetAvg * (6228 / 4828.5));
@@ -581,9 +590,10 @@
                 return Math.round(targetSurface * (8789 / HERO_BASE_AVG));
             }
             else if (modeKey.startsWith('paladin_')) {
+                const isFire = modeKey === 'paladin_blast_fire';
                 const attacksPerMin = hasSI ? (60000 / 630) : 80;
                 const expectedSkillMult = 7.5 + (hasSE ? 0.21 : 0);
-                const surfaceMult = 1.4 * 1.1; // 1.54
+                const surfaceMult = isFire ? (1.2 * 1.5 * 1.1) : (1.4 * 1.1);
                 
                 let targetSingleHit = targetDpm / attacksPerMin;
                 let targetAvgHitBase = targetSingleHit / expectedSkillMult;
@@ -591,19 +601,17 @@
                 return Math.round(targetSurface * (8789 / HERO_BASE_AVG));
             }
             else if (modeKey.startsWith('nl_')) {
-                const adjLUK = luk + levelDiff * 5.45;
-                const mastery = Math.min(75.55, 55.55 + Math.ceil(adjLUK / 77)) / 100;
-                const skillPct = modeKey === 'nl_tt30' ? 1.5 : 1.3333;
-                const avgCritAdd = hasSE ? 0.91 : 0.5;
-                const expectedSkillMult = skillPct + avgCritAdd;
-                const defReduction = 0.55 * 1035; 
-                
                 let mainDpm = targetDpm;
                 if (mainDpm < 0) mainDpm = 0;
+
+                const seMult = hasSE ? 1.53 : 1;
+                mainDpm /= seMult;
+
+                const baseAnchorDpm = modeKey === 'nl_tt30' ? 5544788 : 5082638;
+                const scale = mainDpm / baseAnchorDpm;
                 
-                const avgHitBase = mainDpm / 100 / 4.5 / 1.1 / expectedSkillMult;
-                const maxHitBeforeDef = (avgHitBase + defReduction) * 2 / (1 + 0.9 * mastery);
-                return Math.round(maxHitBeforeDef);
+                const targetAvg = scale * NL_ANCHOR_AVG; 
+                return Math.round(targetAvg * (5343 / NL_ANCHOR_AVG));
             }
             return 0;
         }
@@ -676,11 +684,10 @@
                 const scale = inputAvg / 5816; 
 
                 const mainPct = getBmRfPercent(mainLvl);
-                const seMult = hasSE ? 1.638 : 1;
-                const mainBaseDpm = (7321100 / 1.638) * seMult; 
+                const mainBaseDpm = 7321100; 
                 
                 const mainDpm = Math.floor(mainBaseDpm * scale * (mainPct / 110));
-                const avgHit = Math.floor((14642.2 / 1.638) * seMult * scale * (mainPct / 110));
+                const avgHit = Math.floor(14642.2 * scale * (mainPct / 110));
                 const dps = Math.floor(mainDpm / 60);
                 
                 let summonDpm = 0;
@@ -691,7 +698,6 @@
                 }
                 const totalDpm = mainDpm + summonDpm;
                 
-                const sePctDisplay = hasSE ? ((seMult - 1) * 100).toFixed(1) : 0;
                 const bmSeNote = `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[內建會心 +63.8%]</span>`;
                 const bmSiNote = hasSI ? `<span class="sub-text" style="color:#aaa; margin-left:5px;">(不受極速影響)</span>` : '';
 
@@ -714,17 +720,16 @@
             
             // ------------------ 英雄 (Hero) ------------------
             else if (modeKey.startsWith('hero_')) {
-                const surfaceMult = 2.15; // 鬥氣集中 + 進階鬥氣
+                const surfaceMult = 2.15; 
                 const minSurface = min * surfaceMult;
                 const maxSurface = max * surfaceMult;
-                const defReduction = 0.55 * 1092.5; // 魚王 1150 * 0.95
+                const defReduction = 0.55 * 1092.5; 
                 
                 const minHitBase = Math.max(0, minSurface - defReduction);
                 const maxHitBase = Math.max(0, maxSurface - defReduction);
                 
                 const expectedSkillMult = 2.6 + (hasSE ? 0.21 : 0);
                 
-                // 獨立運算大小傷，完美對齊試算表
                 const minHit = Math.ceil(minHitBase * expectedSkillMult);
                 const maxHit = Math.ceil(maxHitBase * expectedSkillMult);
                 const avgSingleHit = (minHit + maxHit) / 2;
@@ -755,24 +760,24 @@
             
             // ------------------ 聖騎士 (Paladin) ------------------
             else if (modeKey.startsWith('paladin_')) {
-                const holyMult = 1.4 * 1.1; // 聖劍140% * 魔防消除110%
-                const minSurface = min * holyMult;
-                const maxSurface = max * holyMult;
-                const defReduction = 0.55 * 920; // 魚王 1150 * 0.8降魔
+                const isFire = modeKey === 'paladin_blast_fire';
+                const surfaceMult = isFire ? (1.2 * 1.5 * 1.1) : (1.4 * 1.1); // 1.98 vs 1.54
+                const minSurface = min * surfaceMult;
+                const maxSurface = max * surfaceMult;
+                const defReduction = 0.55 * 920; 
                 
                 const minHitBase = Math.max(0, minSurface - defReduction);
                 const maxHitBase = Math.max(0, maxSurface - defReduction);
                 
                 const expectedSkillMult = 7.5 + (hasSE ? 0.21 : 0);
                 
-                // 獨立運算大小傷，完美對齊試算表
                 const minHit = Math.ceil(minHitBase * expectedSkillMult);
                 const maxHit = Math.ceil(maxHitBase * expectedSkillMult);
                 const avgHit = (minHit + maxHit) / 2;
                 
                 const attacksPerMin = hasSI ? (60000 / 630) : 80;
                 const mainDpm = Math.floor(avgHit * attacksPerMin);
-                const dps = Math.floor(mainDpm / 60);
+                const dps = Math.round(mainDpm / 60);
                 const totalDpm = mainDpm;
 
                 const sePctDisplay = hasSE ? (((7.5 + 0.21) / 7.5 - 1) * 100).toFixed(1) : 0;
@@ -780,14 +785,17 @@
                 const siPctDisplay = hasSI ? (((750/630) - 1) * 100).toFixed(2) : 0;
                 const siTag = hasSI ? `<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +${siPctDisplay}% (750ms→630ms)]</span>` : '';
 
+                const skillName = isFire ? "騎士衝擊波30 降魔 火劍30[120%]" : "騎士衝擊波30 降魔 聖劍30[140%]";
+                const multNote = isFire ? "火劍120%×屬性剋制1.5×魔防消除1.1" : "聖劍140%×魔防消除1.1";
+
                 let detailHtml = levelAdjNote + `
-                    <p>單段平均傷害：${Math.round(avgHit).toLocaleString()} <span class="sub-text" style="color:#aaa;">(已扣防 920，含聖劍140%×魔防消除1.1)</span></p>
+                    <p>單段平均傷害：${Math.round(avgHit).toLocaleString()} <span class="sub-text" style="color:#aaa;">(已扣防 920，含${multNote})</span></p>
                     <p>主技能 DPS (秒輸出)：${dps.toLocaleString()}</p>
                     <p>主技能 DPM：${mainDpm.toLocaleString()} <br><span style="display:inline-block; margin-top:4px;">${hasSE ? seTag : ''}${hasSI ? siTag : ''}</span></p>
                 `;
 
                 return {
-                    name: "騎士衝擊波30 降魔 聖劍30[140%]",
+                    name: skillName,
                     totalDpm: totalDpm,
                     adjMax: max,
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用實測底層公式，已自動扣除 920 魚王防禦)</p>`
@@ -812,10 +820,10 @@
                 const avgHitBase = (maxHitBase + minHitBase) / 2;
                 
                 const skillPct = modeKey === 'nl_tt30' ? 1.5 : 1.3333;
-                const avgCritAdd = hasSE ? 0.91 : 0.5;
+                const avgCritAdd = hasSE ? 0.91 : 0.5; 
                 const expectedSkillMult = skillPct + avgCritAdd;
                 
-                const singleStarAvg = Math.floor(avgHitBase * expectedSkillMult * 1.1); // 1.1 = 無形鏢終傷
+                const singleStarAvg = Math.floor(avgHitBase * expectedSkillMult * 1.1); 
                 const totalHitPerAttack = Math.floor(singleStarAvg * 3 * 1.5); 
                 
                 const mainDpm = totalHitPerAttack * 100; 
