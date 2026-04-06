@@ -26,21 +26,28 @@
         }
         .btn-reset:hover { background-color: #ff3333; transform: scale(1.05); }
 
-        /* 全新外層排版：左右分欄 */
+        /* 全新外層排版：左右分欄 + 完美置中機制 */
         .page-wrapper {
             display: flex;
             width: 100%;
-            max-width: 1350px;
+            max-width: 1660px; /* 擴大外框以容納兩側空間 */
             gap: 30px;
             align-items: flex-start;
             justify-content: center;
+        }
+
+        /* 隱形配重塊：用來平衡左側的說明書，確保中間主計算區塊絕對置中 */
+        .page-wrapper::after {
+            content: "";
+            flex: 0 0 300px;
+            display: block;
         }
 
         /* 說明書面板 */
         .manual-panel {
             background-color: #2b2b36; padding: 25px; border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-            flex: 0 0 300px; /* 固定寬度 */
+            flex: 0 0 300px; /* 固定寬度 300px */
             border-top: 5px solid #28a745; /* 綠色飾條 */
             box-sizing: border-box;
         }
@@ -129,10 +136,16 @@
 
         .chart-container { position: relative; height: 350px; width: 100%; }
 
-        /* 響應式排版：螢幕縮小會自動變成上下排列 */
-        @media (max-width: 1100px) {
+        /* 響應式排版：螢幕若不夠放隱形配重塊，取消置中改為靠左 */
+        @media (max-width: 1680px) {
+            .page-wrapper::after { display: none; }
+            .page-wrapper { max-width: 1350px; justify-content: flex-start; }
+        }
+
+        /* 響應式排版：螢幕更小縮自動變成上下排列 */
+        @media (max-width: 1350px) {
             .page-wrapper { flex-direction: column; align-items: center; }
-            .manual-panel { flex: none; width: 100%; max-width: 1000px; }
+            .manual-panel { flex: none; width: 100%; max-width: 1000px; margin-bottom: 20px; }
         }
     </style>
 </head>
@@ -141,7 +154,7 @@
     <h2>Artale OOVS [海怒斯單體] <span class="author-tag">(資料來源及作者: Philip)</span></h2>
     
     <div class="header-section">
-        <p class="update-time">最後更新時間：2026-04-06 15:30</p>
+        <p class="update-time">最後更新時間：2026-04-06 15:40</p>
         <button class="btn-reset" onclick="resetData()">🔄 還原初始化設定</button>
     </div>
 
