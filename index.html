@@ -11,7 +11,8 @@
             background-color: #1a1a24; color: #f5f5f6; margin: 0; padding: 30px 20px;
             display: flex; flex-direction: column; align-items: center;
         }
-        h2 { color: #4db8ff; letter-spacing: 2px; margin-bottom: 30px; text-align: center; }
+        h2 { color: #4db8ff; letter-spacing: 2px; margin-bottom: 10px; text-align: center; }
+        .update-time { color: #888; font-size: 0.9em; text-align: center; margin-top: 0; margin-bottom: 30px; letter-spacing: 1px; }
         
         .main-container {
             display: flex; flex-wrap: wrap; gap: 30px; width: 100%; max-width: 1000px; justify-content: center;
@@ -86,6 +87,7 @@
 <body>
 
     <h2>Artale OOVS</h2>
+    <p class="update-time">最後更新時間：2026-04-06 10:10</p>
 
     <div class="main-container">
         <div class="panel panel-left">
@@ -212,7 +214,7 @@
                 </div>
             </div>
             
-            <div class="form-group checkbox-group" id="p2SEGroup">
+            <div class="form-group checkbox-group" id="p2SEGroup" style="display:none;">
                 <label><input type="checkbox" id="p2SE" onchange="executeCalculation()"> 💡 會心之眼30 (爆率+15%, 爆傷+140%)</label>
             </div>
             <div class="form-group checkbox-group" id="p2SIGroup">
@@ -258,7 +260,6 @@
                 mainLvlGroup.style.display = 'block';
             }
 
-            // 箭神自帶會心，因此隱藏會心選項避免重複勾選
             if (mode.startsWith('bm_')) {
                 seGroup.style.display = 'none';
             } else {
@@ -325,10 +326,6 @@
             executeCalculation(); 
         }
 
-        // ============================================
-        // 技能等級倍率與基礎設定
-        // ============================================
-        
         function getRfPercent(lvl) {
             lvl = Math.max(1, Math.min(30, lvl));
             if (lvl <= 10) return 100 + lvl * 2;       
@@ -400,9 +397,6 @@
             return { currentMainBase, summonBase, skillPct, mainBase };
         }
 
-        // ============================================
-        // 等級調節轉換公式
-        // ============================================
         function getAdjustedRange(min, max, mode, levelDiff, weaponAtt) {
             if (levelDiff === 0 || weaponAtt <= 0) return { adjMin: min, adjMax: max, rangeDiff: 0 };
 
@@ -420,9 +414,6 @@
             return { adjMin: Math.round(adjMin), adjMax: Math.round(adjMax), rangeDiff: Math.round(rangeDiff) };
         }
 
-        // ============================================
-        // 等效大表逆推公式
-        // ============================================
         function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
             if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
@@ -434,7 +425,6 @@
                 }
                 if (mainDpm < 0) mainDpm = 0;
                 
-                // 箭神自帶會心，基準維持不變
                 const baseTargetDpm = 7321100; 
                 
                 const mainPct = getBmRfPercent(mainLvl);
@@ -487,7 +477,6 @@
             const { adjMin: min, adjMax: max, rangeDiff } = getAdjustedRange(rawMin, rawMax, modeKey, levelDiff, weaponAtt);
             const levelAdjNote = levelDiff !== 0 ? `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已套用等級差 ${levelDiff > 0 ? '+'+levelDiff : levelDiff}：面板調節 ${min} ~ ${max})</div>` : '';
 
-            // ------------------ 槍神 (Corsair) ------------------
             if (modeKey.startsWith('cs_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / CS_BASE_AVG; 
@@ -541,15 +530,13 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             } 
-            
-            // ------------------ 箭神 (Bowmaster) ------------------
             else if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / 5816; 
 
                 const mainPct = getBmRfPercent(mainLvl);
-                const mainBaseDpm = 7321100; // 箭神已內建會心
+                const mainBaseDpm = 7321100; 
                 
                 const mainDpm = Math.floor(mainBaseDpm * scale * (mainPct / 110));
                 const avgHit = Math.floor(14642.2 * scale * (mainPct / 110));
@@ -582,8 +569,6 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             }
-            
-            // ------------------ 英雄 (Hero) ------------------
             else if (modeKey.startsWith('hero_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / HERO_BASE_AVG; 
@@ -617,8 +602,6 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             }
-            
-            // ------------------ 夜使者 (Night Lord) ------------------
             else if (modeKey.startsWith('nl_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / NL_BASE_AVG; 
