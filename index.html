@@ -11,7 +11,11 @@
             background-color: #1a1a24; color: #f5f5f6; margin: 0; padding: 30px 20px;
             display: flex; flex-direction: column; align-items: center;
         }
-        h2 { color: #4db8ff; letter-spacing: 2px; margin-bottom: 10px; text-align: center; }
+        h2 { 
+            color: #4db8ff; letter-spacing: 2px; margin-bottom: 10px; text-align: center; 
+            display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+        }
+        .author-tag { font-size: 16px; color: #aaa; font-weight: normal; letter-spacing: 0; }
         .update-time { color: #888; font-size: 0.9em; text-align: center; margin-top: 0; margin-bottom: 30px; letter-spacing: 1px; }
         
         .main-container {
@@ -86,8 +90,8 @@
 </head>
 <body>
 
-    <h2>Artale OOVS</h2>
-    <p class="update-time">最後更新時間：2026-04-06 13:55</p>
+    <h2>Artale OOVS <span class="author-tag">(資料來源及作者: Philip)</span></h2>
+    <p class="update-time">最後更新時間：2026-04-06 14:00</p>
 
     <div class="main-container">
         <div class="panel panel-left">
@@ -283,11 +287,11 @@
                 targetLvlEl.value = 200;
 
                 if (newClassPrefix === 'cs') {
-                    minEl.value = 3429; maxEl.value = 6228; weaponAttEl.value = 142;
+                    minEl.value = 3430; maxEl.value = 6228; weaponAttEl.value = 142;
                 } else if (newClassPrefix === 'bm') {
                     minEl.value = 5225; maxEl.value = 6407; weaponAttEl.value = 156;
                 } else if (newClassPrefix === 'hero') {
-                    minEl.value = 4808; maxEl.value = 8789; weaponAttEl.value = 149;
+                    minEl.value = 5035; maxEl.value = 9202; weaponAttEl.value = 156;
                 } else if (newClassPrefix === 'nl') {
                     minEl.value = 3000; maxEl.value = 5343; weaponAttEl.value = 122;
                 }
@@ -361,7 +365,7 @@
 
         const CS_BASE_AVG = 4828.5;
         const HERO_BASE_AVG = 6798.5; 
-        const NL_ANCHOR_AVG = 4171.5; // 夜使者 3000~5343 的平均
+        const NL_ANCHOR_AVG = 4171.5; // 夜使者 3000~5343 基準面板平均
 
         const BM_MODES = {
             'bm_rf': { name: "純暴風神射", hasPhoenix: false },
@@ -406,6 +410,9 @@
             return { currentMainBase, summonBase, skillPct, mainBase };
         }
 
+        // ============================================
+        // 等級調節轉換公式
+        // ============================================
         function getAdjustedRange(min, max, mode, levelDiff, weaponAtt) {
             if (levelDiff === 0 || weaponAtt <= 0) return { adjMin: min, adjMax: max, rangeDiff: 0 };
 
@@ -492,6 +499,7 @@
             const { adjMin: min, adjMax: max, rangeDiff } = getAdjustedRange(rawMin, rawMax, modeKey, levelDiff, weaponAtt);
             const levelAdjNote = levelDiff !== 0 ? `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已模擬 Lv.${targetLvl} 面板：調節 ${min} ~ ${max})</div>` : '';
 
+            // ------------------ 槍神 (Corsair) ------------------
             if (modeKey.startsWith('cs_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / CS_BASE_AVG; 
@@ -545,6 +553,8 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             } 
+            
+            // ------------------ 箭神 (Bowmaster) ------------------
             else if (modeKey.startsWith('bm_')) {
                 const cfg = BM_MODES[modeKey];
                 const inputAvg = (min + max) / 2;
@@ -584,6 +594,8 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             }
+            
+            // ------------------ 英雄 (Hero) ------------------
             else if (modeKey.startsWith('hero_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / HERO_BASE_AVG; 
@@ -617,6 +629,8 @@
                     html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
                 };
             }
+            
+            // ------------------ 夜使者 (Night Lord) ------------------
             else if (modeKey.startsWith('nl_')) {
                 const inputAvg = (min + max) / 2;
                 const scale = inputAvg / NL_ANCHOR_AVG; 
