@@ -247,6 +247,7 @@
             const editBtn = document.getElementById(player + 'Edit');
             const mainLvlGroup = document.getElementById(player + 'MainLvlGroup');
             const summonLvlGroup = document.getElementById(player + 'SummonLvlGroup');
+            const seGroup = document.getElementById(player + 'SEGroup');
 
             editBtn.style.display = mode.endsWith('_hm') ? 'inline-block' : 'none';
             summonLvlGroup.style.display = (mode === 'bm_rf_ph') ? 'block' : 'none';
@@ -255,6 +256,13 @@
                 mainLvlGroup.style.display = 'none';
             } else {
                 mainLvlGroup.style.display = 'block';
+            }
+
+            // 箭神自帶會心，因此隱藏會心選項避免重複勾選
+            if (mode.startsWith('bm_')) {
+                seGroup.style.display = 'none';
+            } else {
+                seGroup.style.display = 'block';
             }
         }
 
@@ -426,8 +434,8 @@
                 }
                 if (mainDpm < 0) mainDpm = 0;
                 
-                const seMult = hasSE ? 1.638 : 1;
-                const baseTargetDpm = (7321100 / 1.638) * seMult; 
+                // 箭神自帶會心，基準維持不變
+                const baseTargetDpm = 7321100; 
                 
                 const mainPct = getBmRfPercent(mainLvl);
                 const scale = (mainDpm / baseTargetDpm) / (mainPct / 110);
@@ -541,11 +549,10 @@
                 const scale = inputAvg / 5816; 
 
                 const mainPct = getBmRfPercent(mainLvl);
-                const seMult = hasSE ? 1.638 : 1;
-                const mainBaseDpm = (7321100 / 1.638) * seMult; 
+                const mainBaseDpm = 7321100; // 箭神已內建會心
                 
                 const mainDpm = Math.floor(mainBaseDpm * scale * (mainPct / 110));
-                const avgHit = Math.floor((14642.2 / 1.638) * seMult * scale * (mainPct / 110));
+                const avgHit = Math.floor(14642.2 * scale * (mainPct / 110));
                 const dps = Math.floor(mainDpm / 60);
                 
                 let summonDpm = 0;
@@ -556,8 +563,7 @@
                 }
                 const totalDpm = mainDpm + summonDpm;
                 
-                const sePctDisplay = hasSE ? ((seMult - 1) * 100).toFixed(1) : 0;
-                const bmSeNote = hasSE ? `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[會心加成 +${sePctDisplay}%]</span>` : '';
+                const bmSeNote = `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[內建會心 +63.8%]</span>`;
                 const bmSiNote = hasSI ? `<span class="sub-text" style="color:#aaa; margin-left:5px;">(不受極速影響)</span>` : '';
 
                 let detailHtml = levelAdjNote + `
