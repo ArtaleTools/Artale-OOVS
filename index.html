@@ -26,29 +26,17 @@
         }
         .btn-reset:hover { background-color: #ff3333; transform: scale(1.05); }
 
-        /* 全新外層排版：左右分欄 + 完美置中機制 */
         .page-wrapper {
-            display: flex;
-            width: 100%;
-            max-width: 1660px;
-            gap: 30px;
-            align-items: flex-start;
-            justify-content: center;
+            display: flex; width: 100%; max-width: 1660px; gap: 30px;
+            align-items: flex-start; justify-content: center;
         }
 
-        .page-wrapper::after {
-            content: "";
-            flex: 0 0 300px;
-            display: block;
-        }
+        .page-wrapper::after { content: ""; flex: 0 0 300px; display: block; }
 
-        /* 說明書面板 */
         .manual-panel {
             background-color: #2b2b36; padding: 25px; border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-            flex: 0 0 300px; 
-            border-top: 5px solid #28a745; 
-            box-sizing: border-box;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4); flex: 0 0 300px; 
+            border-top: 5px solid #28a745; box-sizing: border-box;
         }
         .manual-panel h3 { margin-top: 0; color: #fff; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 20px; text-align: center;}
         .manual-step { margin-bottom: 25px; }
@@ -57,18 +45,9 @@
         .manual-step .highlight-text { color: #ffcc00; font-weight: bold; }
         .manual-step .sub-text { color: #888; font-size: 0.85em; display: block; margin-top: 8px; line-height: 1.4; background: #1e1e24; padding: 10px; border-radius: 6px; border-left: 3px solid #ffd700;}
 
-        /* 右側主要計算區塊 */
-        .content-area {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            max-width: 1000px;
-            width: 100%;
-        }
+        .content-area { display: flex; flex-direction: column; flex: 1; max-width: 1000px; width: 100%; }
 
-        .main-container {
-            display: flex; flex-wrap: wrap; gap: 30px; width: 100%; justify-content: center;
-        }
+        .main-container { display: flex; flex-wrap: wrap; gap: 30px; width: 100%; justify-content: center; }
         .panel {
             background-color: #2b2b36; padding: 25px; border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.4); flex: 1; min-width: 320px;
@@ -104,9 +83,7 @@
         }
         .checkbox-group label.si-label { color: #4db8ff; }
         .checkbox-group label:hover { background-color: #454555; }
-        .checkbox-group input[type="checkbox"] {
-            width: 20px; height: 20px; margin-right: 10px; cursor: pointer;
-        }
+        .checkbox-group input[type="checkbox"] { width: 20px; height: 20px; margin-right: 10px; cursor: pointer; }
 
         .result-panel {
             background-color: #2b2b36; padding: 30px; border-radius: 12px; width: 100%;
@@ -151,30 +128,25 @@
     <h2>Artale OOVS [海怒斯單體] <span class="author-tag">(資料來源及作者: Philip)</span></h2>
     
     <div class="header-section">
-        <p class="update-time">最後更新時間：2026-04-06 16:30</p>
+        <p class="update-time">最後更新時間：2026-04-06 17:30</p>
         <button class="btn-reset" onclick="resetData()">🔄 還原初始化設定</button>
     </div>
 
     <div class="page-wrapper">
-        
         <div class="manual-panel">
             <h3>📖 使用說明書</h3>
-            
             <div class="manual-step">
                 <h4>1️⃣ 選擇輸出模式</h4>
-                <p>在 <span class="highlight-text">[玩家 A]</span> 選擇你自己的職業與輸出配置，接著在 <span class="highlight-text">[玩家 B]</span> 選擇你想比較的對手。</p>
+                <p>在 <span class="highlight-text">[玩家 A]</span> 選擇你自己的配置，接著在 <span class="highlight-text">[玩家 B]</span> 選擇對手。</p>
             </div>
-            
             <div class="manual-step">
                 <h4>2️⃣ 模擬對手面板</h4>
-                <p>不知道對手的實際大表與小表？直接輸入「目標等級」即可精準模擬！</p>
-                <span class="sub-text">💡 舉例：<br>你目前 150 等，就在左邊填 150。<br>對手 170 等，就在右邊填 170。<br>下方會即時顯示「(已模擬 Lv.150 面板)」，幫助你快速建立基準點。</span>
+                <p>不知道對手表攻？直接輸入「目標等級」即可自動模擬！</p>
+                <span class="sub-text">💡 舉例：<br>你目前 150 等，左邊填 150。<br>對手 170 等，右邊填 170。<br>下方常駐顯示「(已模擬 Lv.XXX 面板)」。</span>
             </div>
-            
             <div class="manual-step">
-                <h4>3️⃣ 檢視差距與追趕目標</h4>
-                <p>設定完畢後，往下查看【輸出差距比對】，能大概觀察雙方的實戰差距。</p>
-                <span class="sub-text">🎯 最下方的「等效追趕需求」會精算出：玩家 B 調節後的大表攻約需撐到多少，總輸出才會與玩家 A 持平！</span>
+                <h4>3️⃣ 檢視追趕目標</h4>
+                <p>觀察【輸出差距比對】，最下方會精算出玩家 B 調節後大表需達到多少才能與玩家 A 持平。</p>
             </div>
         </div>
 
@@ -210,17 +182,14 @@
                             </optgroup>
                         </select>
                     </div>
-                    
                     <div class="form-group" id="p1MainLvlGroup" style="display:none;">
-                        <label>主技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                        <label>主技能等級 (1~30)</label>
                         <input type="number" id="p1MainLvl" value="30" min="1" max="30" oninput="executeCalculation()">
                     </div>
-                    
                     <div class="form-group" id="p1SummonLvlGroup" style="display:none;">
-                        <label>鳳凰技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                        <label>鳳凰技能等級 (1~30)</label>
                         <input type="number" id="p1SummonLvl" value="30" min="1" max="30" oninput="executeCalculation()">
                     </div>
-
                     <div class="flex-row">
                         <div class="form-group">
                             <label>目標等級 (基準: 200)</label>
@@ -231,7 +200,6 @@
                             <input type="number" id="p1WeaponAtt" value="122" oninput="executeCalculation()">
                         </div>
                     </div>
-
                     <div class="flex-row">
                         <div class="form-group">
                             <label>主技能小表 (Min)</label>
@@ -242,7 +210,6 @@
                             <input type="number" id="p1Max" value="5343" oninput="executeCalculation()">
                         </div>
                     </div>
-                    
                     <div class="form-group checkbox-group" id="p1SEGroup">
                         <label><input type="checkbox" id="p1SE" onchange="executeCalculation()"> 💡 會心之眼30 (爆率+15%, 爆傷+140%)</label>
                     </div>
@@ -281,17 +248,14 @@
                             </optgroup>
                         </select>
                     </div>
-
                     <div class="form-group" id="p2MainLvlGroup">
-                        <label>主技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                        <label>主技能等級 (1~30)</label>
                         <input type="number" id="p2MainLvl" value="30" min="1" max="30" oninput="executeCalculation()">
                     </div>
-                    
                     <div class="form-group" id="p2SummonLvlGroup" style="display:none;">
-                        <label>鳳凰技能等級 (1~30) <span style="color:#ffcc00; font-weight:normal;">*影響倍率*</span></label>
+                        <label>鳳凰技能等級 (1~30)</label>
                         <input type="number" id="p2SummonLvl" value="30" min="1" max="30" oninput="executeCalculation()">
                     </div>
-
                     <div class="flex-row">
                         <div class="form-group">
                             <label>目標等級 (基準: 200)</label>
@@ -302,7 +266,6 @@
                             <input type="number" id="p2WeaponAtt" value="156" oninput="executeCalculation()">
                         </div>
                     </div>
-
                     <div class="flex-row">
                         <div class="form-group">
                             <label>主技能小表 (Min)</label>
@@ -313,7 +276,6 @@
                             <input type="number" id="p2Max" value="6407" oninput="executeCalculation()">
                         </div>
                     </div>
-                    
                     <div class="form-group checkbox-group" id="p2SEGroup" style="display:none;">
                         <label><input type="checkbox" id="p2SE" onchange="executeCalculation()"> 💡 會心之眼30 (爆率+15%, 爆傷+140%)</label>
                     </div>
@@ -321,187 +283,104 @@
                         <label class="si-label"><input type="checkbox" id="p2SI" onchange="executeCalculation()"> ⚡ 最終極速 (依職業動態套用增幅)</label>
                     </div>
                 </div>
-            </div> <div class="result-panel" id="resultPanel">
+            </div>
+
+            <div class="result-panel" id="resultPanel">
                 <div class="diff-text" id="diffText"></div>
-                
                 <div class="details-grid">
                     <div class="detail-box" id="p1Detail"></div>
                     <div class="detail-box right" id="p2Detail"></div>
                 </div>
-
                 <div class="equiv-box" id="equivBox"></div>
-
                 <div class="chart-container">
                     <canvas id="dpmChart"></canvas>
                 </div>
             </div>
-        </div> </div> <script>
+        </div>
+    </div>
+
+    <script>
         const STORAGE_KEY = 'artale_oovs_state';
-        
-        let p1HmLevel = 20;
-        let p2HmLevel = 20;
+        let p1HmLevel = 20, p2HmLevel = 20;
         let currentClass = { p1: 'nl', p2: 'bm' };
 
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 try {
-                    const state = JSON.parse(saved);
-                    p1HmLevel = state.p1HmLevel || 20;
-                    p2HmLevel = state.p2HmLevel || 20;
-                    currentClass = state.currentClass || { p1: 'nl', p2: 'bm' };
-
-                    document.getElementById('p1Mode').value = state.p1Mode;
-                    document.getElementById('p1MainLvl').value = state.p1MainLvl;
-                    document.getElementById('p1SummonLvl').value = state.p1SummonLvl;
-                    document.getElementById('p1TargetLvl').value = state.p1TargetLvl;
-                    document.getElementById('p1WeaponAtt').value = state.p1WeaponAtt;
-                    document.getElementById('p1Min').value = state.p1Min;
-                    document.getElementById('p1Max').value = state.p1Max;
-                    document.getElementById('p1SE').checked = state.p1SE;
-                    document.getElementById('p1SI').checked = state.p1SI;
-
-                    document.getElementById('p2Mode').value = state.p2Mode;
-                    document.getElementById('p2MainLvl').value = state.p2MainLvl;
-                    document.getElementById('p2SummonLvl').value = state.p2SummonLvl;
-                    document.getElementById('p2TargetLvl').value = state.p2TargetLvl;
-                    document.getElementById('p2WeaponAtt').value = state.p2WeaponAtt;
-                    document.getElementById('p2Min').value = state.p2Min;
-                    document.getElementById('p2Max').value = state.p2Max;
-                    document.getElementById('p2SE').checked = state.p2SE;
-                    document.getElementById('p2SI').checked = state.p2SI;
-                } catch(e) {
-                    console.error("無法讀取存檔資料", e);
-                }
+                    const s = JSON.parse(saved);
+                    p1HmLevel = s.p1HmLevel || 20; p2HmLevel = s.p2HmLevel || 20;
+                    currentClass = s.currentClass || { p1: 'nl', p2: 'bm' };
+                    ['p1','p2'].forEach(p => {
+                        document.getElementById(p+'Mode').value = s[p+'Mode'];
+                        document.getElementById(p+'MainLvl').value = s[p+'MainLvl'];
+                        document.getElementById(p+'SummonLvl').value = s[p+'SummonLvl'];
+                        document.getElementById(p+'TargetLvl').value = s[p+'TargetLvl'];
+                        document.getElementById(p+'WeaponAtt').value = s[p+'WeaponAtt'];
+                        document.getElementById(p+'Min').value = s[p+'Min'];
+                        document.getElementById(p+'Max').value = s[p+'Max'];
+                        document.getElementById(p+'SE').checked = s[p+'SE'];
+                        document.getElementById(p+'SI').checked = s[p+'SI'];
+                    });
+                } catch(e) { console.error(e); }
             }
         }
 
         function saveData() {
-            const state = {
-                p1HmLevel: p1HmLevel,
-                p2HmLevel: p2HmLevel,
-                currentClass: currentClass,
-                p1Mode: document.getElementById('p1Mode').value,
-                p1MainLvl: document.getElementById('p1MainLvl').value,
-                p1SummonLvl: document.getElementById('p1SummonLvl').value,
-                p1TargetLvl: document.getElementById('p1TargetLvl').value,
-                p1WeaponAtt: document.getElementById('p1WeaponAtt').value,
-                p1Min: document.getElementById('p1Min').value,
-                p1Max: document.getElementById('p1Max').value,
-                p1SE: document.getElementById('p1SE').checked,
-                p1SI: document.getElementById('p1SI').checked,
-                p2Mode: document.getElementById('p2Mode').value,
-                p2MainLvl: document.getElementById('p2MainLvl').value,
-                p2SummonLvl: document.getElementById('p2SummonLvl').value,
-                p2TargetLvl: document.getElementById('p2TargetLvl').value,
-                p2WeaponAtt: document.getElementById('p2WeaponAtt').value,
-                p2Min: document.getElementById('p2Min').value,
-                p2Max: document.getElementById('p2Max').value,
-                p2SE: document.getElementById('p2SE').checked,
-                p2SI: document.getElementById('p2SI').checked
-            };
+            const state = { p1HmLevel, p2HmLevel, currentClass };
+            ['p1','p2'].forEach(p => {
+                ['Mode','MainLvl','SummonLvl','TargetLvl','WeaponAtt','Min','Max'].forEach(f => state[p+f] = document.getElementById(p+f).value);
+                state[p+'SE'] = document.getElementById(p+'SE').checked;
+                state[p+'SI'] = document.getElementById(p+'SI').checked;
+            });
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         }
 
-        function resetData() {
-            if (confirm("確定要清除所有設定並還原至初始化狀態嗎？")) {
-                localStorage.removeItem(STORAGE_KEY);
-                location.reload();
-            }
+        function resetData() { if(confirm("確定要清除所有設定並還原嗎？")) { localStorage.removeItem(STORAGE_KEY); location.reload(); } }
+
+        function updateVisibility(p) {
+            const m = document.getElementById(p+'Mode').value;
+            document.getElementById(p+'Edit').style.display = m.endsWith('_hm') ? 'inline-block' : 'none';
+            document.getElementById(p+'SummonLvlGroup').style.display = (m === 'bm_rf_ph') ? 'block' : 'none';
+            document.getElementById(p+'MainLvlGroup').style.display = (m.startsWith('hero_') || m.startsWith('nl_') || m.startsWith('paladin_')) ? 'none' : 'block';
+            document.getElementById(p+'SEGroup').style.display = m.startsWith('bm_') ? 'none' : 'block';
+            document.getElementById(p+'SIGroup').style.display = (m.startsWith('bm_') || m.startsWith('nl_')) ? 'none' : 'block';
         }
 
-        function updateVisibility(player) {
-            const mode = document.getElementById(player + 'Mode').value;
-            const editBtn = document.getElementById(player + 'Edit');
-            const mainLvlGroup = document.getElementById(player + 'MainLvlGroup');
-            const summonLvlGroup = document.getElementById(player + 'SummonLvlGroup');
-            const seGroup = document.getElementById(player + 'SEGroup');
-            const siGroup = document.getElementById(player + 'SIGroup');
-
-            editBtn.style.display = mode.endsWith('_hm') ? 'inline-block' : 'none';
-            summonLvlGroup.style.display = (mode === 'bm_rf_ph') ? 'block' : 'none';
-
-            if (mode.startsWith('hero_') || mode.startsWith('nl_') || mode.startsWith('paladin_')) {
-                mainLvlGroup.style.display = 'none';
-            } else {
-                mainLvlGroup.style.display = 'block';
+        function handleModeChange(p) {
+            const m = document.getElementById(p+'Mode').value, prefix = m.split('_')[0];
+            if (prefix !== currentClass[p]) {
+                const map = {
+                    cs: [3430, 6228, 142], bm: [5225, 6407, 156], hero: [5035, 9202, 156],
+                    nl: [3000, 5343, 122], paladin: [4808, 8789, 149]
+                };
+                document.getElementById(p+'TargetLvl').value = 200;
+                [document.getElementById(p+'Min').value, document.getElementById(p+'Max').value, document.getElementById(p+'WeaponAtt').value] = map[prefix];
+                currentClass[p] = prefix;
             }
-
-            if (mode.startsWith('bm_')) {
-                seGroup.style.display = 'none';
-            } else {
-                seGroup.style.display = 'block';
-            }
-
-            if (mode.startsWith('bm_') || mode.startsWith('nl_')) {
-                siGroup.style.display = 'none';
-            } else {
-                siGroup.style.display = 'block';
-            }
+            updateVisibility(p);
+            const selectEl = document.getElementById(p+'Mode');
+            Array.from(selectEl.options).forEach(opt => { if(opt.value.endsWith('_hm')) opt.text = opt.text.replace(/精準\[\d+\]|精準\[數值\]/, `精準[${p==='p1'?p1HmLevel:p2HmLevel}]`); });
+            if(m.endsWith('_hm')) promptLevel(p); else executeCalculation();
         }
 
-        function handleModeChange(player) {
-            const selectEl = document.getElementById(player + 'Mode');
-            const mode = selectEl.value;
-            
-            const newClassPrefix = mode.split('_')[0]; 
-            if (newClassPrefix !== currentClass[player]) {
-                const minEl = document.getElementById(player + 'Min');
-                const maxEl = document.getElementById(player + 'Max');
-                const weaponAttEl = document.getElementById(player + 'WeaponAtt');
-                const targetLvlEl = document.getElementById(player + 'TargetLvl');
-                
-                targetLvlEl.value = 200;
-
-                if (newClassPrefix === 'cs') {
-                    minEl.value = 3430; maxEl.value = 6228; weaponAttEl.value = 142;
-                } else if (newClassPrefix === 'bm') {
-                    minEl.value = 5225; maxEl.value = 6407; weaponAttEl.value = 156;
-                } else if (newClassPrefix === 'hero') {
-                    minEl.value = 5035; maxEl.value = 9202; weaponAttEl.value = 156;
-                } else if (newClassPrefix === 'paladin') {
-                    minEl.value = 4808; maxEl.value = 8789; weaponAttEl.value = 149;
-                } else if (newClassPrefix === 'nl') {
-                    minEl.value = 3000; maxEl.value = 5343; weaponAttEl.value = 122;
-                }
-                currentClass[player] = newClassPrefix;
+        function promptLevel(p) {
+            let val = prompt("請輸入精準目標等級 (1~20):", p==='p1'?p1HmLevel:p2HmLevel);
+            if(val) {
+                let lvl = Math.min(20, Math.max(1, parseInt(val, 10)));
+                if(p==='p1') p1HmLevel = lvl; else p2HmLevel = lvl;
             }
-
-            updateVisibility(player);
-
-            Array.from(selectEl.options).forEach(opt => {
-                if (opt.value.endsWith('_hm')) {
-                    opt.text = opt.text.replace(/精準\[\d+\]/, '精準[數值]');
-                }
-            });
-
-            if (mode.endsWith('_hm')) {
-                promptLevel(player); 
-            } else {
-                executeCalculation(); 
-            }
+            const selectEl = document.getElementById(p+'Mode');
+            selectEl.options[selectEl.selectedIndex].text = selectEl.options[selectEl.selectedIndex].text.replace(/精準\[\d+\]|精準\[數值\]/, `精準[${p==='p1'?p1HmLevel:p2HmLevel}]`);
+            executeCalculation();
         }
 
-        function promptLevel(player) {
-            const selectEl = document.getElementById(player + 'Mode');
-            let currentLvl = player === 'p1' ? p1HmLevel : p2HmLevel;
-            let val = prompt("請輸入精準目標等級 (1~20):", currentLvl);
-            
-            if (val !== null && val.trim() !== "") {
-                let lvl = parseInt(val, 10);
-                if (!isNaN(lvl)) {
-                    if (lvl < 1) lvl = 1;
-                    if (lvl > 20) lvl = 20;
-                    if (player === 'p1') p1HmLevel = lvl;
-                    else p2HmLevel = lvl;
-                }
-            }
-            
-            currentLvl = player === 'p1' ? p1HmLevel : p2HmLevel;
-            const optionEl = selectEl.options[selectEl.selectedIndex];
-            optionEl.text = optionEl.text.replace(/精準\[\d+\]|精準\[數值\]/, `精準[${currentLvl}]`);
-            
-            executeCalculation(); 
+        function getAdjustedRange(min, max, mode, levelDiff, weaponAtt) {
+            if(levelDiff === 0 || weaponAtt <= 0) return { adjMin: min, adjMax: max };
+            let mult = mode.startsWith('bm_') ? 3.4 : 4.0;
+            if(mode.startsWith('nl_') || mode.startsWith('cs_')) mult = 3.6;
+            const diff = levelDiff * 5 * 1.09 * mult * (weaponAtt / 100), ratio = max ? min/max : 0;
+            return { adjMin: Math.round(min + diff*ratio), adjMax: Math.round(max + diff) };
         }
 
         function getRfPercent(lvl) {
@@ -529,8 +408,8 @@
         }
 
         const CS_BASE_AVG = 4828.5;
-        const HERO_BASE_AVG = 6798.5; 
-        const NL_ANCHOR_AVG = 4171.5; 
+        const HERO_BASE_AVG = 6798.5;
+        const NL_ANCHOR_AVG = 4171.5;
 
         const BM_MODES = {
             'bm_rf': { name: "純暴風神射", hasPhoenix: false },
@@ -546,491 +425,187 @@
             'cs_cannon_octo_hm': "純加農砲 + 4隻章魚 + 精準目標"
         };
 
-        function getCorsairBaseDpm(modeKey, skillLvl, hmLevel) {
-            let mainBase = 0;
-            let mainHm20 = 0;
-            let summonBase = 0;
-            let skillPct = 0;
-
-            if (modeKey.includes('rf')) {
-                skillPct = getRfPercent(skillLvl);
-                mainBase = 4195980 * (skillPct / 200);   
-                mainHm20 = 5004963 * (skillPct / 200); 
-            } else if (modeKey.includes('cannon')) {
-                skillPct = getCannonPercent(skillLvl);
-                mainBase = 6074286 * (skillPct / 380);   
-                mainHm20 = 6453882 * (skillPct / 380);
-            }
-
-            if (modeKey.includes('octo')) {
-                summonBase = 3756450;
-            }
-
-            let currentMainBase = mainBase;
-            if (modeKey.includes('hm')) {
-                hmLevel = Math.max(1, Math.min(20, hmLevel || 20));
-                currentMainBase = mainBase + ((mainHm20 - mainBase) * (hmLevel / 20));
-            }
-
-            return { currentMainBase, summonBase, skillPct, mainBase };
-        }
-
-        function getAdjustedRange(min, max, mode, levelDiff, weaponAtt) {
-            if (levelDiff === 0 || weaponAtt <= 0) return { adjMin: min, adjMax: max, rangeDiff: 0 };
-
-            let classMultiplier = 3.6; 
-            if (mode.startsWith('bm_')) classMultiplier = 3.4;
-            if (mode.startsWith('hero_') || mode.startsWith('paladin_')) classMultiplier = 4.0;
-
-            const statDiff = levelDiff * 5 * 1.09; 
-            const rangeDiff = statDiff * classMultiplier * (weaponAtt / 100);
-
-            const ratio = max !== 0 ? (min / max) : 0;
-            const adjMax = Math.max(0, max + rangeDiff);
-            const adjMin = Math.max(0, min + (rangeDiff * ratio)); 
-
-            return { adjMin: Math.round(adjMin), adjMax: Math.round(adjMax), rangeDiff: Math.round(rangeDiff) };
-        }
-
-        function getEquivalentRange(targetDpm, modeKey, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
-            if (modeKey.startsWith('bm_')) {
-                const cfg = BM_MODES[modeKey];
-                let mainDpm = targetDpm;
-                
-                if (cfg.hasPhoenix) {
-                    const summonPct = getPhoenixPercent(summonLvl);
-                    mainDpm -= Math.floor(221528 * (summonPct / 550));
-                }
-                if (mainDpm < 0) mainDpm = 0;
-                
-                const baseTargetDpm = 7321100; 
-                
-                const mainPct = getBmRfPercent(mainLvl);
-                const scale = (mainDpm / baseTargetDpm) / (mainPct / 110);
-                const targetAvg = scale * 5816; 
-                return Math.round(targetAvg * (6407 / 5816));
-            } 
-            else if (modeKey.startsWith('cs_')) {
-                const { currentMainBase, summonBase, skillPct } = getCorsairBaseDpm(modeKey, mainLvl, hmLevel);
-                
-                let effectiveMainBase = currentMainBase;
-                if (hasSE) effectiveMainBase *= ((skillPct + 21) / skillPct); 
-                if (hasSI && modeKey.includes('cannon')) effectiveMainBase *= 1.05; 
-                
-                const baseTotal = effectiveMainBase + summonBase;
-                if (baseTotal === 0) return 0;
-
-                const scale = targetDpm / baseTotal;
-                const targetAvg = scale * CS_BASE_AVG;
-                return Math.round(targetAvg * (6228 / 4828.5));
-            }
-            else if (modeKey.startsWith('hero_')) {
-                const attacksPerMin = hasSI ? (60000 / 630) : 80;
-                const expectedSkillMult = 2.6 + (hasSE ? 0.21 : 0);
-                const surfaceMult = 2.15;
-                
-                let targetSingleHit = targetDpm / (2 * attacksPerMin);
-                let targetAvgHitBase = targetSingleHit / expectedSkillMult;
-                let targetSurface = (targetAvgHitBase + 0.55 * 1092.5) / surfaceMult;
-                return Math.round(targetSurface * (8789 / HERO_BASE_AVG));
-            }
-            else if (modeKey.startsWith('paladin_')) {
-                const isFire = modeKey === 'paladin_blast_fire';
-                const attacksPerMin = hasSI ? (60000 / 630) : 80;
-                const expectedSkillMult = 7.5 + (hasSE ? 0.21 : 0);
-                const surfaceMult = isFire ? (1.2 * 1.5 * 1.1) : (1.4 * 1.1);
-                
-                let targetSingleHit = targetDpm / attacksPerMin;
-                let targetAvgHitBase = targetSingleHit / expectedSkillMult;
-                let targetSurface = (targetAvgHitBase + 0.55 * 920) / surfaceMult;
-                return Math.round(targetSurface * (8789 / HERO_BASE_AVG));
-            }
-            else if (modeKey.startsWith('nl_')) {
-                let mainDpm = targetDpm;
-                if (mainDpm < 0) mainDpm = 0;
-
-                const isTT30 = modeKey === 'nl_tt30';
-                const baseDpmAnchor = isTT30 ? 5544788 : 5082638;
-                
-                const baseSkillMult = isTT30 ? 2.0 : 1.8333;
-                const seSkillMult = isTT30 ? 3.06 : 2.8933;
-                const seMult = hasSE ? (seSkillMult / baseSkillMult) : 1;
-
-                mainDpm /= seMult;
-                const scale = mainDpm / baseDpmAnchor;
-                
-                const targetAvg = scale * NL_ANCHOR_AVG; 
-                return Math.round(targetAvg * (5343 / NL_ANCHOR_AVG));
-            }
-            return 0;
-        }
-
         function calculateDPM(modeKey, rawMin, rawMax, targetLvl, weaponAtt, hmLevel, mainLvl, summonLvl, hasSE, hasSI) {
-            
-            const levelDiff = targetLvl - 200;
-            const { adjMin: min, adjMax: max, rangeDiff } = getAdjustedRange(rawMin, rawMax, modeKey, levelDiff, weaponAtt);
+            const levelDiff = targetLvl - 200, { adjMin: min, adjMax: max } = getAdjustedRange(rawMin, rawMax, modeKey, levelDiff, weaponAtt);
             const levelAdjNote = `<div style="color:#ffcc00; font-size:0.9em; margin-bottom:10px;">(已模擬 Lv.${targetLvl} 面板：調節 ${min} ~ ${max})</div>`;
+            let totalDpm = 0, summonDpm = 0, detailHtml = levelAdjNote, name = "", adjMaxOut = max;
 
-            // ------------------ 槍神 (Corsair) ------------------
             if (modeKey.startsWith('cs_')) {
-                const inputAvg = (min + max) / 2;
-                const scale = inputAvg / CS_BASE_AVG; 
-                
-                const { currentMainBase, summonBase, skillPct, mainBase } = getCorsairBaseDpm(modeKey, mainLvl, hmLevel);
-                
                 const isCannon = modeKey.includes('cannon');
-                const seMult = hasSE ? (skillPct + 21) / skillPct : 1;
-                const siMult = (hasSI && isCannon) ? 1.05 : 1; 
-
-                const sePctDisplay = hasSE ? ((seMult - 1) * 100).toFixed(1) : 0;
-                const seTag = hasSE ? `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[會心加成 +${sePctDisplay}%]</span>` : '';
+                const skillPct = isCannon ? getCannonPercent(mainLvl) : getRfPercent(mainLvl);
+                const expectedSkillMult = (skillPct + (hasSE ? 21 : 0)) / 100;
                 
-                let siTag = '';
-                if (hasSI) {
-                    siTag = isCannon ? `<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +5.0%]</span>` 
-                                     : `<span class="sub-text" style="color:#aaa; margin-left:5px;">(不受極速影響)</span>`;
-                }
-
-                const isHm = modeKey.includes('hm');
-                let detailName = CS_NAMES[modeKey];
-                
-                if (isHm) {
-                    hmLevel = Math.max(1, Math.min(20, hmLevel || 20));
-                    detailName = detailName.replace('精準目標', `精準(${hmLevel}等)`);
-                }
-
-                const mainDpm = Math.floor(currentMainBase * scale * seMult * siMult);
-                const summonDpm = Math.floor(summonBase * scale);
-                const totalDpm = mainDpm + summonDpm;
-                const mainDps = Math.floor(mainDpm / 60);
-
-                let detailHtml = levelAdjNote + `<p>主技能 DPS (秒輸出)：${mainDps.toLocaleString()}</p>`;
-                
-                if (isHm) {
-                    const scaledMainBase = Math.floor(mainBase * scale * seMult * siMult);
-                    const scaledBonus = mainDpm - scaledMainBase;
-                    detailHtml += `<p>主技能 DPM：${mainDpm.toLocaleString()} <span style="font-size:0.9em; color:#aaa;">(${scaledMainBase.toLocaleString()}+精準等級[${scaledBonus.toLocaleString()}])</span> <br><span class="sub-text" style="color:#ffcc00; display:inline-block; margin-top:4px;">[Lv.${mainLvl} 技能倍率: ${skillPct}%]</span>${seTag}${siTag}</p>`;
+                // 人為因素：上船與章魚延遲
+                let attacks;
+                if (isCannon) {
+                    if (modeKey.includes('octo')) {
+                        // 10s迴圈：扣除章魚825ms與上船600ms = 8575ms
+                        // 無SI (630ms) -> 13發 -> 13*6=78次/分 -> 312段
+                        // 有SI (600ms) -> 14發 -> 14*6=84次/分 -> 336段
+                        attacks = hasSI ? 336 : 312;
+                    } else {
+                        // 純加農砲不下船 (381段/分)
+                        attacks = hasSI ? 400 : 381;
+                    }
                 } else {
-                    detailHtml += `<p>主技能 DPM：${mainDpm.toLocaleString()} <span class="sub-text" style="color:#ffcc00; margin-left:5px;">[Lv.${mainLvl} 技能倍率: ${skillPct}%]</span>${seTag}${siTag}</p>`;
+                    attacks = 500; // 迅雷
                 }
 
-                if (summonDpm > 0) {
-                    detailHtml += `<p>章魚群 DPM：${summonDpm.toLocaleString()} <span class="sub-text" style="color:#888;">(召喚物不受會心影響)</span></p>`;
+                const def = 0.55 * 1150; 
+                // 完全對齊單段進位公式
+                const baseMinHit = Math.ceil(Math.max(0, min - def) * expectedSkillMult);
+                const baseMaxHit = Math.ceil(Math.max(0, max - def) * expectedSkillMult);
+                const baseAvgHit = (baseMinHit + baseMaxHit) / 2;
+                const baseMainDpm = Math.floor(baseAvgHit * attacks);
+
+                let mainDpm = baseMainDpm;
+                let hmBonus = 0;
+                const isHm = modeKey.includes('hm');
+                name = CS_NAMES[modeKey];
+                let hmLevelClamped = 0;
+
+                if (isHm) {
+                    hmLevelClamped = Math.max(1, Math.min(20, hmLevel || 20));
+                    name = name.replace('精準目標', `精準(${hmLevelClamped}等)`);
+                    const hmMult = (110 + hmLevelClamped) / 100; // 111% ~ 130%
+                    
+                    // 依照要求：將精準差額獨立拉出，並無條件進位
+                    hmBonus = Math.ceil(baseMainDpm * (hmMult - 1));
+                    mainDpm = baseMainDpm + hmBonus;
                 }
 
-                return {
-                    name: detailName,
-                    totalDpm: totalDpm,
-                    adjMax: max,
-                    html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
-                };
+                if (modeKey.includes('octo')) {
+                    const scale = ((min + max) / 2) / CS_BASE_AVG;
+                    summonDpm = Math.floor(3756450 * scale);
+                }
+                totalDpm = mainDpm + summonDpm;
+                
+                const sePctDisplay = hasSE ? ((21 / skillPct) * 100).toFixed(1) : 0;
+                const seTag = hasSE ? `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[會心加成 +${sePctDisplay}%]</span>` : '';
+                const siTag = (hasSI && isCannon) ? `<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +5.0%]</span>` : '';
+
+                let humanFactorNote = "";
+                if (isCannon && modeKey.includes('octo')) {
+                    humanFactorNote = `<br><span class="sub-text" style="color:#aaa;">(已計入人為因素：10秒迴圈扣除章魚825ms/上船600ms)</span>`;
+                }
+
+                detailHtml += `<p>單段平均傷害：${baseAvgHit.toLocaleString()} <span class="sub-text">(已扣防 1150，未含精準)</span></p>`;
+                detailHtml += `<p>主技能 DPS (秒輸出)：${Math.floor(mainDpm/60).toLocaleString()}</p>`;
+                
+                if (isHm) {
+                    detailHtml += `<p>主技能 DPM：${mainDpm.toLocaleString()} <br><span style="font-size:0.9em; color:#aaa;">(${baseMainDpm.toLocaleString()} + 精準等級${hmLevelClamped}加成[<span style="color:#ffd700;">${hmBonus.toLocaleString()}</span>])</span> <br><span class="sub-text" style="color:#ffcc00; display:inline-block; margin-top:4px;">[Lv.${mainLvl} 技能倍率: ${skillPct}%]</span>${seTag}${siTag}</p>`;
+                } else {
+                    detailHtml += `<p>主技能 DPM：${mainDpm.toLocaleString()} <br><span class="sub-text" style="color:#ffcc00; display:inline-block; margin-top:4px;">[Lv.${mainLvl} 技能倍率: ${skillPct}%]</span>${seTag}${siTag}</p>`;
+                }
+
+                if (summonDpm > 0) detailHtml += `<p>章魚 DPM：${summonDpm.toLocaleString()}</p>`;
+                detailHtml += humanFactorNote;
+                
+                return { name, totalDpm, summonDpm, adjMax: max, html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用實測底層公式與精準進位法)</p>` };
             } 
-            
-            // ------------------ 箭神 (Bowmaster) ------------------
             else if (modeKey.startsWith('bm_')) {
-                const cfg = BM_MODES[modeKey];
-                const inputAvg = (min + max) / 2;
-                const scale = inputAvg / 5816; 
-
-                const mainPct = getBmRfPercent(mainLvl);
-                const mainBaseDpm = 7321100; 
-                
-                const mainDpm = Math.floor(mainBaseDpm * scale * (mainPct / 110));
-                const avgHit = Math.floor(14642.2 * scale * (mainPct / 110));
-                const dps = Math.floor(mainDpm / 60);
-                
-                let summonDpm = 0;
-                let summonPct = 0;
-                if (cfg.hasPhoenix) {
-                    summonPct = getPhoenixPercent(summonLvl);
-                    summonDpm = Math.floor(221528 * (summonPct / 550));
-                }
-                const totalDpm = mainDpm + summonDpm;
-                
-                const bmSeNote = `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[內建會心 +63.8%]</span>`;
-
-                let detailHtml = levelAdjNote + `
-                    <p>單段平均傷害：${avgHit.toLocaleString()}</p>
-                    <p>主技能 DPS (秒輸出)：${dps.toLocaleString()}</p>
-                    <p>主技能 DPM：${mainDpm.toLocaleString()} <span class="sub-text" style="color:#ffcc00; margin-left:5px;">[Lv.${mainLvl} 倍率: ${mainPct}%]</span>${bmSeNote}</p>
-                `;
-                if (cfg.hasPhoenix) {
-                    detailHtml += `<p>鳳凰 DPM：${summonDpm.toLocaleString()} <span class="sub-text" style="color:#ffcc00; margin-left:5px;">[Lv.${summonLvl} 倍率: ${summonPct}%]</span></p>`;
-                }
-
-                return {
-                    name: cfg.name,
-                    totalDpm: totalDpm,
-                    adjMax: max,
-                    html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(按當前面板比例動態精算)</p>`
-                };
+                const avg = (min+max)/2, scale = avg/5816, mainPct = getBmRfPercent(mainLvl);
+                const mainDpm = Math.floor(7321100 * scale * (mainPct/110));
+                if (modeKey.includes('ph')) summonDpm = Math.floor(221528 * (getPhoenixPercent(summonLvl)/550));
+                totalDpm = mainDpm + summonDpm;
+                detailHtml += `<p>單段均傷：${Math.floor(14642.2 * scale * (mainPct/110)).toLocaleString()}</p><p>主技能 DPS：${Math.floor(mainDpm/60).toLocaleString()}</p><p>主技能 DPM：${mainDpm.toLocaleString()} <span class="sub-text" style="color:#ffcc00;">[Lv.${mainLvl} 倍率: ${mainPct}%] [內建會心 +63.8%]</span></p>${summonDpm?`<p>鳳凰 DPM：${summonDpm.toLocaleString()}</p>`:''}`;
+                name = BM_MODES[modeKey].name;
             }
-            
-            // ------------------ 英雄 (Hero) ------------------
             else if (modeKey.startsWith('hero_')) {
-                const surfaceMult = 2.15; 
-                const minSurface = min * surfaceMult;
-                const maxSurface = max * surfaceMult;
-                const defReduction = 0.55 * 1092.5; 
-                
-                const minHitBase = Math.max(0, minSurface - defReduction);
-                const maxHitBase = Math.max(0, maxSurface - defReduction);
-                
-                const expectedSkillMult = 2.6 + (hasSE ? 0.21 : 0);
-                
-                const minHit = Math.ceil(minHitBase * expectedSkillMult);
-                const maxHit = Math.ceil(maxHitBase * expectedSkillMult);
-                const avgSingleHit = (minHit + maxHit) / 2;
-                
-                const attacksPerMin = hasSI ? (60000 / 630) : 80;
-                const mainDpm = Math.floor(avgSingleHit * 2 * attacksPerMin);
-                const dps = Math.floor(mainDpm / 60);
-                const totalDpm = mainDpm;
-
-                const sePctDisplay = hasSE ? (((2.6 + 0.21) / 2.6 - 1) * 100).toFixed(1) : 0;
-                const seTag = hasSE ? `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[會心加成 +${sePctDisplay}%]</span>` : '';
-                const siPctDisplay = hasSI ? (((750/630) - 1) * 100).toFixed(2) : 0;
-                const siTag = hasSI ? `<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +${siPctDisplay}% (750ms→630ms)]</span>` : '';
-
-                let detailHtml = levelAdjNote + `
-                    <p>單段平均傷害：${Math.round(avgSingleHit).toLocaleString()} <span class="sub-text" style="color:#aaa;">(已扣防 1092.5，含進階鬥氣215%)</span></p>
-                    <p>主技能 DPS (秒輸出)：${dps.toLocaleString()}</p>
-                    <p>主技能 DPM：${mainDpm.toLocaleString()} <br><span style="display:inline-block; margin-top:4px;">${hasSE ? seTag : ''}${hasSI ? siTag : ''}</span></p>
-                `;
-
-                return {
-                    name: "無雙劍舞30 260% + 進階鬥氣滿215%",
-                    totalDpm: totalDpm,
-                    adjMax: max,
-                    html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用實測底層公式，已自動扣除魚王防禦)</p>`
-                };
+                const minS = min*2.15, maxS = max*2.15, def = 0.55*1092.5, sMult = 2.6+(hasSE?0.21:0), attacks = hasSI ? (60000/630) : 80;
+                const avgHit = (Math.max(0, minS-def)*sMult + Math.max(0, maxS-def)*sMult)/2;
+                totalDpm = Math.floor(avgHit * 2 * attacks);
+                detailHtml += `<p>單段均傷：${Math.round(avgHit).toLocaleString()} <span class="sub-text">(已扣防 1092.5，含進階鬥氣215%)</span></p><p>主技能 DPS：${Math.floor(totalDpm/60).toLocaleString()}</p><p>主技能 DPM：${totalDpm.toLocaleString()} <br><span style="display:inline-block; margin-top:4px;">${hasSE?`<span class="sub-text" style="color:#ffcc00;">[會心加成 +${(((2.6+0.21)/2.6-1)*100).toFixed(1)}%]</span>`:''}${hasSI?`<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +${(((750/630)-1)*100).toFixed(2)}%]</span>`:''}</span></p>`;
+                name = "無雙劍舞30 260% + 進階鬥氣滿215%";
             }
-            
-            // ------------------ 聖騎士 (Paladin) ------------------
             else if (modeKey.startsWith('paladin_')) {
-                const isFire = modeKey === 'paladin_blast_fire';
-                const surfaceMult = isFire ? (1.2 * 1.5 * 1.1) : (1.4 * 1.1); 
-                const minSurface = min * surfaceMult;
-                const maxSurface = max * surfaceMult;
-                const defReduction = 0.55 * 920; 
-                
-                const minHitBase = Math.max(0, minSurface - defReduction);
-                const maxHitBase = Math.max(0, maxSurface - defReduction);
-                
-                const expectedSkillMult = 7.5 + (hasSE ? 0.21 : 0);
-                
-                const minHit = Math.ceil(minHitBase * expectedSkillMult);
-                const maxHit = Math.ceil(maxHitBase * expectedSkillMult);
-                const avgHit = (minHit + maxHit) / 2;
-                
-                const attacksPerMin = hasSI ? (60000 / 630) : 80;
-                const mainDpm = Math.floor(avgHit * attacksPerMin);
-                const dps = Math.round(mainDpm / 60);
-                const totalDpm = mainDpm;
-
-                const sePctDisplay = hasSE ? (((7.5 + 0.21) / 7.5 - 1) * 100).toFixed(1) : 0;
-                const seTag = hasSE ? `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[會心加成 +${sePctDisplay}%]</span>` : '';
-                const siPctDisplay = hasSI ? (((750/630) - 1) * 100).toFixed(2) : 0;
-                const siTag = hasSI ? `<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +${siPctDisplay}% (750ms→630ms)]</span>` : '';
-
-                const skillName = isFire ? "騎士衝擊波30 降魔 火劍30[120%]" : "騎士衝擊波30 降魔 聖劍30[140%]";
-                const multNote = isFire ? "火劍120%×屬性剋制1.5×魔防消除1.1" : "聖劍140%×魔防消除1.1";
-
-                let detailHtml = levelAdjNote + `
-                    <p>單段平均傷害：${Math.round(avgHit).toLocaleString()} <span class="sub-text" style="color:#aaa;">(已扣防 920，含${multNote})</span></p>
-                    <p>主技能 DPS (秒輸出)：${dps.toLocaleString()}</p>
-                    <p>主技能 DPM：${mainDpm.toLocaleString()} <br><span style="display:inline-block; margin-top:4px;">${hasSE ? seTag : ''}${hasSI ? siTag : ''}</span></p>
-                `;
-
-                return {
-                    name: skillName,
-                    totalDpm: totalDpm,
-                    adjMax: max,
-                    html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用實測底層公式，已自動扣除 920 魚王防禦)</p>`
-                };
+                const isF = modeKey.includes('fire'), sMult = isF ? (1.2*1.5*1.1) : (1.4*1.1), def = 0.55*920, skillM = 7.5+(hasSE?0.21:0), attacks = hasSI?(60000/630):80;
+                const avgHit = (Math.max(0, min*sMult-def)*skillM + Math.max(0, max*sMult-def)*skillM)/2;
+                totalDpm = Math.floor(avgHit * attacks);
+                detailHtml += `<p>單段均傷：${Math.round(avgHit).toLocaleString()} <span class="sub-text">(已扣防 920，含${isF?"火劍120%×屬性剋制1.5×魔防消除1.1":"聖劍140%×魔防消除1.1"})</span></p><p>主技能 DPS：${Math.round(totalDpm/60).toLocaleString()}</p><p>主技能 DPM：${totalDpm.toLocaleString()} <br><span style="display:inline-block; margin-top:4px;">${hasSE?`<span class="sub-text" style="color:#ffcc00;">[會心加成 +${(((7.5+0.21)/7.5-1)*100).toFixed(1)}%]</span>`:''}${hasSI?`<span class="sub-text" style="color:#4db8ff; margin-left:5px;">[極速 +${(((750/630)-1)*100).toFixed(2)}%]</span>`:''}</span></p>`;
+                name = isF ? "騎士衝擊波30 降魔 火劍30[120%]" : "騎士衝擊波30 降魔 聖劍30[140%]";
             }
-            
-            // ------------------ 夜使者 (Night Lord) ------------------
             else if (modeKey.startsWith('nl_')) {
-                const inputAvg = (min + max) / 2;
-                const scale = inputAvg / NL_ANCHOR_AVG; 
-                
-                const isTT30 = modeKey === 'nl_tt30';
-                const baseDpmAnchor = isTT30 ? 5544788 : 5082638;
-                const baseHitAnchor = isTT30 ? 12322 : 11295;
-                
-                const baseSkillMult = isTT30 ? 2.0 : 1.8333;
-                const seSkillMult = isTT30 ? 3.06 : 2.8933; 
-                const seMult = hasSE ? (seSkillMult / baseSkillMult) : 1;
-                
-                const mainDpm = Math.floor(baseDpmAnchor * scale * seMult);
-                const singleStarHit = Math.floor(baseHitAnchor * scale * seMult);
-                const totalHitPerAttack = Math.floor(singleStarHit * 4.5); 
-                
-                const dps = Math.floor(mainDpm / 60);
-                const totalDpm = mainDpm;
-
-                const sePctDisplay = hasSE ? (((seSkillMult / baseSkillMult) - 1) * 100).toFixed(1) : 0;
-                const seTag = hasSE ? `<span class="sub-text" style="color:#ffcc00; margin-left:5px;">[會心加成 +${sePctDisplay}%]</span>` : '';
-                
-                const skillName = isTT30 ? '三飛閃30' : '三飛閃20';
-
-                let detailHtml = levelAdjNote + `
-                    <p>單發飛鏢均傷：${singleStarHit.toLocaleString()} <span class="sub-text" style="color:#aaa;">(不含影分身)</span></p>
-                    <p>單次出手總傷：${totalHitPerAttack.toLocaleString()} <span class="sub-text" style="color:#aaa;">(3發鏢 + 影分身)</span></p>
-                    <p>主技能 DPS (秒輸出)：${dps.toLocaleString()}</p>
-                    <p>主技能 DPM：${mainDpm.toLocaleString()} <br><span style="display:inline-block; margin-top:4px;">${hasSE ? seTag : ''}</span></p>
-                `;
-
-                return {
-                    name: `${skillName} + 影分身 + 無形鏢`,
-                    totalDpm: totalDpm,
-                    adjMax: max,
-                    html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用最終實測實戰數據，已內含 5.26 係數與魚王防禦)</p>`
-                };
+                const isTT30 = modeKey==='nl_tt30', anchor = isTT30 ? 5544788 : 5082638, hAnchor = isTT30 ? 12322 : 11295;
+                const scale = ((min+max)/2)/NL_ANCHOR_AVG, seMult = hasSE ? (isTT30?3.06/2.0:2.8933/1.8333) : 1;
+                totalDpm = Math.floor(anchor * scale * seMult);
+                const avgHit = Math.floor(hAnchor * scale * seMult);
+                detailHtml += `<p>單發飛鏢均傷：${avgHit.toLocaleString()} <span class="sub-text">(不含影分身)</span></p><p>單次出手總傷：${Math.floor(avgHit*4.5).toLocaleString()} <span class="sub-text">(3發鏢 + 影分身)</span></p><p>主技能 DPS：${Math.floor(totalDpm/60).toLocaleString()}</p><p>主技能 DPM：${totalDpm.toLocaleString()}${hasSE?`<br><span class="sub-text" style="color:#ffcc00; display:inline-block; margin-top:4px;">[會心加成 +${((seMult-1)*100).toFixed(1)}%]</span>`:''}</p>`;
+                name = (isTT30 ? '三飛閃30' : '三飛閃20') + " + 影分身 + 無形鏢";
             }
+            return { totalDpm, summonDpm: summonDpm || 0, name, adjMax: adjMaxOut, html: detailHtml + `<p class="sub-text" style="margin-top:12px;">(採用Philip實測資料與絕對傷害公式計算)</p>` };
         }
 
         let chartInstance = null;
-
         function executeCalculation() {
-            const p1Mode = document.getElementById('p1Mode').value;
-            const p1Min = Number(document.getElementById('p1Min').value);
-            const p1Max = Number(document.getElementById('p1Max').value);
-            const p1TargetLvl = Number(document.getElementById('p1TargetLvl').value) || 200;
-            const p1WeaponAtt = Number(document.getElementById('p1WeaponAtt').value) || 0;
-            const p1MainLvl = Number(document.getElementById('p1MainLvl').value) || 30;
-            const p1SummonLvl = Number(document.getElementById('p1SummonLvl').value) || 30;
-            const p1SE = document.getElementById('p1SE').checked;
-            const p1SI = document.getElementById('p1SI').checked;
-            const p1Result = calculateDPM(p1Mode, p1Min, p1Max, p1TargetLvl, p1WeaponAtt, p1HmLevel, p1MainLvl, p1SummonLvl, p1SE, p1SI);
-
-            const p2Mode = document.getElementById('p2Mode').value;
-            const p2Min = Number(document.getElementById('p2Min').value);
-            const p2Max = Number(document.getElementById('p2Max').value);
-            const p2TargetLvl = Number(document.getElementById('p2TargetLvl').value) || 200;
-            const p2WeaponAtt = Number(document.getElementById('p2WeaponAtt').value) || 0;
-            const p2MainLvl = Number(document.getElementById('p2MainLvl').value) || 30;
-            const p2SummonLvl = Number(document.getElementById('p2SummonLvl').value) || 30;
-            const p2SE = document.getElementById('p2SE').checked;
-            const p2SI = document.getElementById('p2SI').checked;
-            const p2Result = calculateDPM(p2Mode, p2Min, p2Max, p2TargetLvl, p2WeaponAtt, p2HmLevel, p2MainLvl, p2SummonLvl, p2SE, p2SI);
-
-            document.getElementById('p1Detail').innerHTML = `
-                <h4>[玩家 A] ${p1Result.name}</h4>
-                ${p1Result.html}
-                <hr style="border-color:#444; margin:10px 0;">
-                <p>總合 DPM：<span class="highlight">${p1Result.totalDpm.toLocaleString()}</span></p>
-            `;
-
-            document.getElementById('p2Detail').innerHTML = `
-                <h4>[玩家 B] ${p2Result.name}</h4>
-                ${p2Result.html}
-                <hr style="border-color:#444; margin:10px 0;">
-                <p>總合 DPM：<span class="highlight">${p2Result.totalDpm.toLocaleString()}</span></p>
-            `;
-
-            const diff = p2Result.totalDpm - p1Result.totalDpm;
-            const pct = (Math.abs(diff) / p1Result.totalDpm * 100).toFixed(2);
-            let diffHtml = "";
-
-            if (diff > 0) {
-                diffHtml = `玩家 B 高出 <span class="lose">${diff.toLocaleString()}</span> (贏 ${pct}%)`;
-            } else if (diff < 0) {
-                diffHtml = `玩家 A 高出 <span class="win">${Math.abs(diff).toLocaleString()}</span> (贏 ${pct}%)`;
-            } else {
-                diffHtml = "雙方輸出完全一致！";
-            }
-            
-            document.getElementById('diffText').innerHTML = `<strong>【輸出差距比對】</strong><br>${diffHtml}`;
-            
-            const getClassName = (mode) => {
-                if (mode.startsWith('cs_')) return '槍神';
-                if (mode.startsWith('bm_')) return '箭神';
-                if (mode.startsWith('hero_')) return '英雄';
-                if (mode.startsWith('paladin_')) return '聖騎士';
-                if (mode.startsWith('nl_')) return '夜使者';
-                return '未知';
-            };
-
-            const classNameA = getClassName(p1Mode);
-            const classNameB = getClassName(p2Mode);
-            
-            let eqHtml = `<h4 style="margin:0 0 10px 0; color:#fff;">🎯 等效大表追趕需求</h4>`;
-            let showEqBox = false;
-
-            if (diff > 0) {
-                const eqA = getEquivalentRange(p2Result.totalDpm, p1Mode, p1HmLevel, p1MainLvl, p1SummonLvl, p1SE, p1SI);
-                const gap = eqA - p1Result.adjMax; 
-                const tableNameA = '調節後大表';
-                eqHtml += `<p>要達到 玩家 B (${classNameB}) 的總輸出，玩家 A (${classNameA}) ${tableNameA}約需撐到：<span class="eq-val">${eqA.toLocaleString()}</span></p>`;
-                if (gap > 0) {
-                    eqHtml += `<p class="gap-val">(距離當前${tableNameA}還差：<strong>${gap.toLocaleString()}</strong>)</p>`;
-                }
-                showEqBox = true;
-            } else if (diff < 0) {
-                const eqB = getEquivalentRange(p1Result.totalDpm, p2Mode, p2HmLevel, p2MainLvl, p2SummonLvl, p2SE, p2SI);
-                const gap = eqB - p2Result.adjMax; 
-                const tableNameB = '調節後大表';
-                eqHtml += `<p>要達到 玩家 A (${classNameA}) 的總輸出，玩家 B (${classNameB}) ${tableNameB}約需撐到：<span class="eq-val">${eqB.toLocaleString()}</span></p>`;
-                if (gap > 0) {
-                    eqHtml += `<p class="gap-val">(距離當前${tableNameB}還差：<strong>${gap.toLocaleString()}</strong>)</p>`;
-                }
-                showEqBox = true;
-            }
-
-            const equivBoxEl = document.getElementById('equivBox');
-            if (showEqBox) {
-                equivBoxEl.innerHTML = eqHtml;
-                equivBoxEl.style.display = 'block';
-            } else {
-                equivBoxEl.style.display = 'none'; 
-            }
-
-            const ctx = document.getElementById('dpmChart').getContext('2d');
-            if (chartInstance) chartInstance.destroy();
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['總合實戰 DPM'],
-                    datasets: [
-                        { label: `玩家 A (${p1Result.name})`, data: [p1Result.totalDpm], backgroundColor: 'rgba(77, 184, 255, 0.8)', borderColor: 'rgba(77, 184, 255, 1)', borderWidth: 1 },
-                        { label: `玩家 B (${p2Result.name})`, data: [p2Result.totalDpm], backgroundColor: 'rgba(255, 77, 77, 0.8)', borderColor: 'rgba(255, 77, 77, 1)', borderWidth: 1 }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    animation: { duration: 400 }, 
-                    plugins: { legend: { labels: { color: '#fff', font: { size: 14 } } } },
-                    scales: {
-                        y: { ticks: { color: '#ccc' }, grid: { color: '#444' }, beginAtZero: true },
-                        x: { ticks: { color: '#ccc', font: { size: 14 } }, grid: { display: false } }
-                    }
-                }
+            const res = ['p1','p2'].map(p => {
+                const mode = document.getElementById(p+'Mode').value;
+                const result = calculateDPM(mode, +document.getElementById(p+'Min').value, +document.getElementById(p+'Max').value, +document.getElementById(p+'TargetLvl').value, +document.getElementById(p+'WeaponAtt').value, p==='p1'?p1HmLevel:p2HmLevel, +document.getElementById(p+'MainLvl').value, +document.getElementById(p+'SummonLvl').value, document.getElementById(p+'SE').checked, document.getElementById(p+'SI').checked);
+                document.getElementById(p+'Detail').innerHTML = `<h4>[玩家 ${p==='p1'?'A':'B'}] ${result.name}</h4>${result.html}<hr style="border-color:#444;"><p>總合 DPM：<span class="highlight">${result.totalDpm.toLocaleString()}</span></p>`;
+                return result;
             });
+            const diff = res[1].totalDpm - res[0].totalDpm, pct = (Math.abs(diff)/res[0].totalDpm*100).toFixed(2);
+            document.getElementById('diffText').innerHTML = `<strong>【輸出差距比對】</strong><br>${diff>0?`玩家 B 高出 <span class="lose">${diff.toLocaleString()}</span> (贏 ${pct}%)`:diff<0?`玩家 A 高出 <span class="win">${Math.abs(diff).toLocaleString()}</span> (贏 ${pct}%)`:'雙方一致'}`;
             
-            document.getElementById('resultPanel').classList.add('active');
-            
+            const eqBox = document.getElementById('equivBox');
+            if(diff !== 0) {
+                const p = diff>0?'p1':'p2', other = diff>0?1:0, me = diff>0?0:1;
+                const eqMax = ['bm_','cs_','hero_','paladin_','nl_'].reduce((acc, cur) => {
+                    const m = document.getElementById(p+'Mode').value;
+                    if(m.startsWith(cur)) {
+                        if(cur === 'nl_') {
+                            const isTT30 = m==='nl_tt30', seMult = document.getElementById(p+'SE').checked ? (isTT30?3.06/2.0:2.8933/1.8333) : 1;
+                            const scale = (res[other].totalDpm / (isTT30?5544788:5082638)) / seMult;
+                            return Math.round(scale * 5343);
+                        }
+                        if(cur === 'hero_' || cur === 'paladin_') {
+                            const isP = cur==='paladin_', isF = m.includes('fire'), sMult = isP ? (isF?1.98:1.54) : 2.15, def = 0.55*(isP?920:1092.5), skillM = (isP?7.5:2.6)+(document.getElementById(p+'SE').checked?0.21:0), attks = document.getElementById(p+'SI').checked?(60000/630):80;
+                            const targetAvgHit = res[other].totalDpm / ((isP?1:2)*attks);
+                            return Math.round(((targetAvgHit/skillM)+def)/sMult * (8789/6798.5));
+                        }
+                        if(cur === 'bm_') return Math.round((res[other].totalDpm/7321100) * 6407);
+                        if(cur === 'cs_') {
+                            const mainRatio = res[me].totalDpm > 0 ? (res[me].totalDpm - res[me].summonDpm) / res[me].totalDpm : 1;
+                            const targetMainDpm = res[other].totalDpm * mainRatio;
+                            
+                            const isCannon = m.includes('cannon');
+                            const skillPct = isCannon ? getCannonPercent(+document.getElementById(p+'MainLvl').value) : getRfPercent(+document.getElementById(p+'MainLvl').value);
+                            const expectedSkillMult = (skillPct + (document.getElementById(p+'SE').checked ? 21 : 0)) / 100;
+                            
+                            let attacks;
+                            if (isCannon) {
+                                if (m.includes('octo')) attacks = document.getElementById(p+'SI').checked ? 336 : 312;
+                                else attacks = document.getElementById(p+'SI').checked ? 400 : 381;
+                            } else {
+                                attacks = 500;
+                            }
+
+                            const hmMult = m.includes('hm') ? (110 + (p==='p1'?p1HmLevel:p2HmLevel))/100 : 1;
+                            const targetBaseDpm = targetMainDpm / hmMult;
+                            const targetAvgHitBase = (targetBaseDpm / attacks) / expectedSkillMult;
+                            const targetAvgSurface = targetAvgHitBase + (0.55 * 1150);
+                            
+                            const maxVal = +document.getElementById(p+'Max').value, minVal = +document.getElementById(p+'Min').value;
+                            const ratio = maxVal ? minVal / maxVal : 0;
+                            return Math.round(targetAvgSurface * (2 / (1 + ratio)));
+                        }
+                    }
+                    return acc;
+                }, 0);
+                eqBox.innerHTML = `<h4 style="color:#fff;">🎯 等效大表追趕需求</h4><p>要達到 玩家 ${p==='p1'?'B':'A'} 的輸出，玩家 ${p==='p1'?'A':'B'} 大表約需撐到：<span class="eq-val">${eqMax.toLocaleString()}</span></p>`;
+                eqBox.style.display = 'block';
+            } else eqBox.style.display = 'none';
+
+            if(chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(document.getElementById('dpmChart').getContext('2d'), {
+                type: 'bar', data: { labels: ['總合 DPM'], datasets: [{label:'玩家 A', data:[res[0].totalDpm], backgroundColor:'rgba(77,184,255,0.8)'},{label:'玩家 B', data:[res[1].totalDpm], backgroundColor:'rgba(255,77,77,0.8)'}]},
+                options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:'#fff'}}}, scales:{y:{ticks:{color:'#ccc'},grid:{color:'#444'}},x:{ticks:{color:'#ccc'}}} }
+            });
             saveData();
         }
 
         window.onload = function() {
-            loadData();
-
-            const updateSelectText = (player) => {
-                const selectEl = document.getElementById(player + 'Mode');
-                Array.from(selectEl.options).forEach(opt => {
-                    if (opt.value.endsWith('_hm')) {
-                        opt.text = opt.text.replace(/精準\[\d+\]|精準\[數值\]/, `精準[${player === 'p1' ? p1HmLevel : p2HmLevel}]`);
-                    }
-                });
-            };
-            updateSelectText('p1');
-            updateSelectText('p2');
-
-            updateVisibility('p1');
-            updateVisibility('p2');
-            executeCalculation();
+            loadData(); handleModeChange('p1'); handleModeChange('p2');
         };
     </script>
 </body>
