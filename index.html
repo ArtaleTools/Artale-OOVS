@@ -122,7 +122,7 @@
     <h2>Artale OOVS [海怒斯單體] <span class="author-tag">(資料來源及作者: Philip)</span></h2>
     
     <div class="header-section">
-        <p class="update-time">最後更新時間：2026-04-06 17:45</p>
+        <p class="update-time">最後更新時間：2026-04-07 21:12</p>
         <button class="btn-reset" onclick="resetData()">🔄 還原初始化設定</button>
     </div>
 
@@ -366,7 +366,7 @@
         function getAdjustedRange(min, max, mode, levelDiff) {
             if(levelDiff === 0) return { adjMin: min, adjMax: max };
             let classMultiplier = 3.6; 
-            let weaponAtt = 142; // 預設武器攻擊力用於隱形換算
+            let weaponAtt = 142; 
             if(mode.startsWith('bm_')) { classMultiplier = 3.4; weaponAtt = 156; }
             else if(mode.startsWith('hero_')) { classMultiplier = 4.0; weaponAtt = 156; }
             else if(mode.startsWith('paladin_')) { classMultiplier = 4.0; weaponAtt = 149; }
